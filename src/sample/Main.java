@@ -7,14 +7,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("LoginForm.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1300, 600);
+        stage.setTitle("Login Screen");
+        stage.setScene(scene);
+        stage.show();
     }
 
 
@@ -24,8 +27,6 @@ public class Main extends Application {
 
         launch(args);
 
-        JDBC.openConnection();
 
-        JDBC.closeConnection();
     }
 }
