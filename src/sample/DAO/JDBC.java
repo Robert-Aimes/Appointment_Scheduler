@@ -20,6 +20,7 @@ public abstract class JDBC {
             Class.forName(driver); //Locate Driver
             connection = DriverManager.getConnection(jdbcUrl, userName, password); //Reference Connection object
             System.out.println("Connection successful!");
+            return connection;
         }
         catch(Exception e){
             System.out.println("Error:" + e.getMessage());
