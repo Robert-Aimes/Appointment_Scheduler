@@ -15,7 +15,7 @@ public abstract class JDBC {
     private static String password = "Passw0rd!"; //Password
     public static Connection connection; //Connection interface
 
-    public static void openConnection(){
+    public static Connection openConnection(){
         try{
             Class.forName(driver); //Locate Driver
             connection = DriverManager.getConnection(jdbcUrl, userName, password); //Reference Connection object
@@ -24,6 +24,7 @@ public abstract class JDBC {
         catch(Exception e){
             System.out.println("Error:" + e.getMessage());
         }
+        return null;
     }
 
     public static void closeConnection(){
