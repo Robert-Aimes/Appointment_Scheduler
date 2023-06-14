@@ -8,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import sample.DAO.JDBC;
 import sample.main.Main;
@@ -17,6 +19,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.fxml.Initializable;
 
 
 import java.awt.*;
@@ -25,12 +28,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
+import java.util.Locale;
 
-public class loginFormController {
+
+public class loginFormController implements Initializable{
 
     @FXML private TextField username;
     @FXML private TextField password;
     @FXML private Button loginButton;
+    @FXML private Label title;
+    @FXML private Label usernameLabel;
+    @FXML private Label passwordLabel;
+    @FXML private Label zoneID;
 
 
     /**
@@ -109,8 +118,21 @@ public class loginFormController {
     }
 
 
-
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+            // Load the appropriate resource bundle based on the user's locale
+        Locale locale = Locale.getDefault();
+        resourceBundle = ResourceBundle.getBundle("resources/language", locale);
+
+
+        usernameLabel.setText(resourceBundle.getString("usernameLabel"));
+        passwordLabel.setText(resourceBundle.getString("passwordLabel"));
+        loginButton.setText(resourceBundle.getString("loginButton"));
+        title.setText(resourceBundle.getString("title"));
+            // ...
+
+
 
     }
 }
