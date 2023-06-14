@@ -49,7 +49,11 @@ public class loginFormController {
             alert.showAndWait();
         }
         else if(isAuthenticated){
-            openMainScreen();
+            Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
+            Scene mainScreenScene = new Scene(mainScreenWindow);
+            Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            window.setScene(mainScreenScene);
+            window.show();
 
 
         } else{
@@ -98,33 +102,6 @@ public class loginFormController {
         return false;
     }
 
-
-
-    private <MainScreenController> void openMainScreen() {
-        try {
-            // Load the FXML file for the main screen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("mainScreen.fxml"));
-            Parent root = loader.load();
-
-            // Get the controller for the main screen
-            MainScreenController mainScreenController = loader.getController();
-
-            // Pass any necessary data to the main screen controller if needed
-            // mainScreenController.setData(...);
-
-            // Create a new scene with the loaded FXML file
-            Scene mainScene = new Scene(root);
-
-            // Set the scene on the primary stage
-            EmbeddedWindow primaryStage = null;
-            primaryStage.setScene(mainScene);
-
-            // Show the main screen
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
