@@ -45,7 +45,7 @@ public class loginFormController {
         boolean isAuthenticated = authenticateUser(enteredUsername, enteredPassword);
 
         if(enteredUsername.equals("") || enteredPassword.equals("")){
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Username or Password not entered. Please enter both a Username and Password.", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Username or Password not entered. Please enter both a Username and Password.", ButtonType.OK);
             alert.showAndWait();
         }
         else if(isAuthenticated){
@@ -82,6 +82,12 @@ public class loginFormController {
                     statement.close();
                     connection.close();
                     return true;
+                } else{
+                    resultSet.close();
+                    statement.close();
+                    connection.close();
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Username or Password not correct. Please try again.", ButtonType.OK);
+                    alert.showAndWait();
                 }
 
                 resultSet.close();
