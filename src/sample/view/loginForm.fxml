@@ -6,28 +6,36 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.loginFormController">
     <children>
-        <Label fx:id ="title" layoutX="110.0" layoutY="64.0" text="Appointment Scheduler">
+        <Label fx:id="title" layoutX="110.0" layoutY="64.0" text="Appointment Scheduler">
             <font>
                 <Font name="System Bold" size="34.0" />
             </font>
         </Label>
-        <Label layoutX="140.0" layoutY="163.0" text="Username">
+        <Label fx:id="usernameLabel" layoutX="140.0" layoutY="163.0" text="Username">
             <font>
                 <Font size="17.0" />
             </font>
         </Label>
-        <Label layoutX="142.0" layoutY="219.0" text="Password">
+        <Label fx:id="passwordLabel" layoutX="142.0" layoutY="219.0" text="Password">
             <font>
                 <Font size="17.0" />
             </font>
         </Label>
         <TextField fx:id="username" layoutX="226.0" layoutY="163.0" />
-      <Label text="User Location" />
+      <Label layoutX="180.0" layoutY="335.0" text="Zone">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font></Label>
         <TextField fx:id="password" layoutX="226.0" layoutY="219.0" />
         <Button fx:id="loginButton" layoutX="262.0" layoutY="274.0" mnemonicParsing="false" onAction="#loginButtonClicked" prefHeight="35.0" prefWidth="76.0" text="Log-in">
             <font>
                 <Font size="15.0" />
             </font>
         </Button>
+      <Label fx:id="zoneID" layoutX="255.0" layoutY="335.0" prefHeight="26.0" prefWidth="216.0" text="Label">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

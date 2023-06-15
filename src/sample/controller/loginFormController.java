@@ -27,8 +27,10 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.time.ZoneId;
 import java.util.ResourceBundle;
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class loginFormController implements Initializable{
@@ -63,10 +65,6 @@ public class loginFormController implements Initializable{
             Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
             window.setScene(mainScreenScene);
             window.show();
-
-
-        } else{
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Username or Password not correct. Please try again.", ButtonType.OK);
         }
     }
 
@@ -123,14 +121,17 @@ public class loginFormController implements Initializable{
 
             // Load the appropriate resource bundle based on the user's locale
         Locale locale = Locale.getDefault();
-        resourceBundle = ResourceBundle.getBundle("resources/language", locale);
+        TimeZone timezone = TimeZone.getTimeZone(String.valueOf(locale));
+        String timeZoneDisplayName = ZoneId.systemDefault().getId();
+        zoneID.setText(timeZoneDisplayName);
 
+        resourceBundle = ResourceBundle.getBundle("sample.resources.language", locale);
 
+        loginButton.setText(resourceBundle.getString("loginButton"));
         usernameLabel.setText(resourceBundle.getString("usernameLabel"));
         passwordLabel.setText(resourceBundle.getString("passwordLabel"));
-        loginButton.setText(resourceBundle.getString("loginButton"));
         title.setText(resourceBundle.getString("title"));
-            // ...
+
 
 
 
