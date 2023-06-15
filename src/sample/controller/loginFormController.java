@@ -139,7 +139,11 @@ public class loginFormController implements Initializable{
         return false;
     }
 
-
+    /**
+     * Grabs resource bundle and translates text based on users locale
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
