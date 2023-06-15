@@ -42,6 +42,9 @@ public class loginFormController implements Initializable{
     @FXML private Label usernameLabel;
     @FXML private Label passwordLabel;
     @FXML private Label zoneID;
+    private String alertTitle;
+    private String alertHeader;
+    private String alertText;
 
 
     /**
@@ -56,8 +59,17 @@ public class loginFormController implements Initializable{
         boolean isAuthenticated = authenticateUser(enteredUsername, enteredPassword);
 
         if(enteredUsername.equals("") || enteredPassword.equals("")){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Username or Password not entered. Please enter both a Username and Password.", ButtonType.OK);
-            alert.showAndWait();
+            Locale locale = Locale.getDefault();
+            if (locale.getLanguage().equals("fr")) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("erreur");
+                alert.setHeaderText("erreur");
+                alert.setContentText("Nom d'utilisateur ou mot de passe non entré. Veuillez saisir à la fois un nom d'utilisateur et un mot de passe.");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Username or Password not entered. Please enter both a Username and Password.", ButtonType.OK);
+                alert.showAndWait();
+            }
         }
         else if(isAuthenticated){
             Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
@@ -93,8 +105,20 @@ public class loginFormController implements Initializable{
                     resultSet.close();
                     statement.close();
                     connection.close();
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Username or Password not correct. Please try again.", ButtonType.OK);
-                    alert.showAndWait();
+
+                    Locale locale = Locale.getDefault();
+                    if (locale.getLanguage().equals("fr")) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("erreur");
+                        alert.setHeaderText("erreur");
+                        alert.setContentText("Nom d'utilisateur ou mot de passe incorrect. Veuillez réessayer.");
+                        alert.showAndWait();
+                    } else{
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Username or Password not correct. Please try again.", ButtonType.OK);
+                        alert.showAndWait();
+
+                    }
+
                 }
 
                 resultSet.close();
@@ -131,9 +155,6 @@ public class loginFormController implements Initializable{
         usernameLabel.setText(resourceBundle.getString("usernameLabel"));
         passwordLabel.setText(resourceBundle.getString("passwordLabel"));
         title.setText(resourceBundle.getString("title"));
-
-
-
 
     }
 }
