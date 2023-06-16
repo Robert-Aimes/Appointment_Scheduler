@@ -73,6 +73,17 @@ public class mainScreenController implements Initializable{
     @FXML private Button logoutButton;
 
 
+
+
+
+    public void addApptButtonClicked(javafx.event.ActionEvent actionEvent) throws IOException {
+        Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/addAppointment.fxml"));
+        Scene mainScreenScene = new Scene(mainScreenWindow);
+        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        window.setScene(mainScreenScene);
+        window.show();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -80,3 +91,5 @@ public class mainScreenController implements Initializable{
 
     }
 }
+
+
