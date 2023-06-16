@@ -73,9 +73,11 @@ public class mainScreenController implements Initializable{
     @FXML private Button logoutButton;
 
 
-
-
-
+    /**
+     * Switches screen to add appointment screen
+     * @param actionEvent
+     * @throws IOException
+     */
     public void addApptButtonClicked(javafx.event.ActionEvent actionEvent) throws IOException {
         Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/addAppointment.fxml"));
         Scene mainScreenScene = new Scene(mainScreenWindow);
@@ -91,6 +93,11 @@ public class mainScreenController implements Initializable{
 
     }
 
+    /**
+     * Switches screen to modify appointment screen
+     * @param actionEvent
+     * @throws IOException
+     */
     public void modifyApptButtonClicked(ActionEvent actionEvent) throws IOException {
         Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/modifyAppointment.fxml"));
         Scene mainScreenScene = new Scene(mainScreenWindow);
@@ -99,6 +106,11 @@ public class mainScreenController implements Initializable{
         window.show();
     }
 
+    /**
+     * Switches screen to add customer screen
+     * @param actionEvent
+     * @throws IOException
+     */
     public void addCustButtonClicked(ActionEvent actionEvent) throws IOException {
         Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/addCustomer.fxml"));
         Scene mainScreenScene = new Scene(mainScreenWindow);
@@ -107,6 +119,11 @@ public class mainScreenController implements Initializable{
         window.show();
     }
 
+    /**
+     * Switches screen to modify customer screen
+     * @param actionEvent
+     * @throws IOException
+     */
     public void modifyCustButtonClicked(ActionEvent actionEvent) throws IOException{
         Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/modifyCustomer.fxml"));
         Scene mainScreenScene = new Scene(mainScreenWindow);
@@ -115,6 +132,11 @@ public class mainScreenController implements Initializable{
         window.show();
     }
 
+    /**
+     * Logs out user and goes back to log in page
+     * @param actionEvent
+     * @throws IOException
+     */
     public void logoutButtonClicked(ActionEvent actionEvent) throws IOException{
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you wish to Logout of the application?", ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
@@ -126,6 +148,19 @@ public class mainScreenController implements Initializable{
             window.show();
 
         }
+    }
+
+    /**
+     * Switches screen to reporting screen
+     * @param actionEvent
+     * @throws IOException
+     */
+    public void reportsButtonClicked(ActionEvent actionEvent) throws IOException{
+        Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/reportsForm.fxml"));
+        Scene mainScreenScene = new Scene(mainScreenWindow);
+        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        window.setScene(mainScreenScene);
+        window.show();
     }
 }
 
