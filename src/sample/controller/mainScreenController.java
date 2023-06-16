@@ -1,6 +1,7 @@
 package sample.controller;
 
 import com.sun.javafx.stage.EmbeddedWindow;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -23,7 +24,6 @@ import javafx.fxml.Initializable;
 
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
@@ -89,6 +89,14 @@ public class mainScreenController implements Initializable{
 
         appointmentAllRadio.setSelected(true);
 
+    }
+
+    public void modifyApptButtonClicked(ActionEvent actionEvent) throws IOException {
+        Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/modifyAppointment.fxml"));
+        Scene mainScreenScene = new Scene(mainScreenWindow);
+        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        window.setScene(mainScreenScene);
+        window.show();
     }
 }
 
