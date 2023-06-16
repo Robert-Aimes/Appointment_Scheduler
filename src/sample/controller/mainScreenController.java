@@ -76,5 +76,7 @@ public class mainScreenController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        appointmentAllRadio.setSelected(true);
+
     }
 }
