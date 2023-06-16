@@ -1,6 +1,8 @@
 package sample.controller;
 
 import com.sun.javafx.stage.EmbeddedWindow;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -23,7 +25,6 @@ import javafx.fxml.Initializable;
 
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
@@ -139,6 +140,10 @@ public class loginFormController implements Initializable{
         return false;
     }
 
+    public void exitButtonClicked(ActionEvent actionEvent) {
+        Platform.exit();
+    }
+
     /**
      * Grabs resource bundle and translates text based on users locale
      * @param url
@@ -161,4 +166,6 @@ public class loginFormController implements Initializable{
         title.setText(resourceBundle.getString("title"));
 
     }
+
+
 }

@@ -55,10 +55,10 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
-      <Button fx:id="addCustomerButton" layoutX="192.0" layoutY="719.0" mnemonicParsing="false" text="Add Customer" />
-      <Button fx:id="modifyCustomerButton" layoutX="359.0" layoutY="719.0" mnemonicParsing="false" text="Modify Customer" />
+      <Button fx:id="addCustomerButton" layoutX="192.0" layoutY="719.0" mnemonicParsing="false" onAction="#addCustButtonClicked" text="Add Customer" />
+      <Button fx:id="modifyCustomerButton" layoutX="359.0" layoutY="719.0" mnemonicParsing="false" onAction="#modifyCustButtonClicked" text="Modify Customer" />
       <Button fx:id="deleteCustomerButton" layoutX="541.0" layoutY="719.0" mnemonicParsing="false" text="Delete Customer" />
       <Button fx:id="reportButton" layoutX="743.0" layoutY="732.0" mnemonicParsing="false" text="Reports" />
-      <Button fx:id="logoutButton" layoutX="856.0" layoutY="732.0" mnemonicParsing="false" text="Logout" />
+      <Button fx:id="logoutButton" layoutX="856.0" layoutY="732.0" mnemonicParsing="false" onAction="#logoutButtonClicked" text="Logout" />
    </children>
 </AnchorPane>

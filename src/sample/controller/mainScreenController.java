@@ -98,6 +98,35 @@ public class mainScreenController implements Initializable{
         window.setScene(mainScreenScene);
         window.show();
     }
+
+    public void addCustButtonClicked(ActionEvent actionEvent) throws IOException {
+        Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/addCustomer.fxml"));
+        Scene mainScreenScene = new Scene(mainScreenWindow);
+        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        window.setScene(mainScreenScene);
+        window.show();
+    }
+
+    public void modifyCustButtonClicked(ActionEvent actionEvent) throws IOException{
+        Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/modifyCustomer.fxml"));
+        Scene mainScreenScene = new Scene(mainScreenWindow);
+        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        window.setScene(mainScreenScene);
+        window.show();
+    }
+
+    public void logoutButtonClicked(ActionEvent actionEvent) throws IOException{
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you wish to Logout of the application?", ButtonType.YES, ButtonType.NO);
+        alert.showAndWait();
+        if(alert.getResult() == ButtonType.YES){
+            Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/loginForm.fxml"));
+            Scene mainScreenScene = new Scene(mainScreenWindow);
+            Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            window.setScene(mainScreenScene);
+            window.show();
+
+        }
+    }
 }
 
 

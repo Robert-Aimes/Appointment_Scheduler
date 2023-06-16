@@ -1,14 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sample.controller.modifyCustomerController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="486.0" prefWidth="444.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.modifyCustomerController">
+    <children>
+        <Label layoutX="161.0" layoutY="37.0" text="Modify Customer">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="53.0" layoutY="107.0" text="Customer ID">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="76.0" layoutY="151.0" text="Name">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="45.0" layoutY="195.0" text="Phone Number">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="69.0" layoutY="237.0" text="Address">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="48.0" layoutY="281.0" text="State/Province">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="57.0" layoutY="326.0" text="Postal Code">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="71.0" layoutY="376.0" text="Country">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <TextField fx:id="modifyCustIdField" disable="true" editable="false" layoutX="172.0" layoutY="107.0" promptText="Auto-Generated" />
+        <TextField fx:id="modifyCustNameField" layoutX="172.0" layoutY="151.0" />
+        <TextField fx:id="modifyCustPhoneField" layoutX="172.0" layoutY="195.0" />
+        <TextField fx:id="modifyCustAddressField" layoutX="172.0" layoutY="237.0" />
+        <ChoiceBox fx:id="modifyCustStateField" layoutX="172.0" layoutY="281.0" prefWidth="150.0" />
+        <ChoiceBox fx:id="modifyCustCountryField" layoutX="172.0" layoutY="376.0" prefWidth="150.0" />
+        <TextField fx:id="modifyCustPostalField" layoutX="173.0" layoutY="326.0" />
+        <Button fx:id="modifyCustSaveButton" layoutX="146.0" layoutY="429.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Save" />
+        <Button fx:id="modifyCustCancelButton" layoutX="269.0" layoutY="429.0" mnemonicParsing="false" text="Cancel" />
+    </children>
 </AnchorPane>

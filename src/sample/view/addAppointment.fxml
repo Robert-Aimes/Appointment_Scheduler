@@ -4,7 +4,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <AnchorPane prefHeight="807.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.addAppointmentController">
    <children>
       <Label layoutX="28.0" layoutY="90.0" text="Appointment ID">
@@ -17,7 +16,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="addApptIdField" editable="false" layoutX="162.0" layoutY="90.0" promptText="Auto Generated" />
+      <TextField fx:id="addApptIdField" disable="true" editable="false" layoutX="162.0" layoutY="90.0" promptText="Auto Generated" />
       <TextField fx:id="addApptTypeField" layoutX="162.0" layoutY="199.0" />
       <TextField fx:id="addApptDescriptionField" layoutX="162.0" layoutY="254.0" />
       <TextField fx:id="addApptLocationField" layoutX="162.0" layoutY="312.0" />
