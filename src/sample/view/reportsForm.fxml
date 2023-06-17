@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sample.controller.reportsController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="579.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.reportsController">
+   <children>
+      <TableView layoutX="38.0" layoutY="96.0" prefHeight="194.0" prefWidth="771.0">
+        <columns>
+          <TableColumn fx:id="schedApptIdField" prefWidth="96.0" text="Appointment ID" />
+          <TableColumn fx:id="schedTitleField" prefWidth="83.0" text="Title" />
+            <TableColumn fx:id="schedTypeField" prefWidth="71.0" text="Type" />
+            <TableColumn fx:id="schedDescriptionField" prefWidth="89.0" text="Description" />
+            <TableColumn fx:id="schedStartDateField" prefWidth="86.0" text="Start Date" />
+            <TableColumn fx:id="SchedStartTimeField" prefWidth="94.0" text="Start Time" />
+            <TableColumn fx:id="schedEndDateField" prefWidth="83.0" text="End Date" />
+            <TableColumn fx:id="schedEndTimeField" prefWidth="86.0" text="End Time" />
+            <TableColumn fx:id="schedCustIdField" prefWidth="82.0" text="Customer ID" />
+        </columns>
+      </TableView>
+      <TableView layoutX="38.0" layoutY="334.0" prefHeight="200.0" prefWidth="324.0">
+        <columns>
+          <TableColumn fx:id="apptMonthField" prefWidth="104.0" text="Month" />
+          <TableColumn fx:id="apptTypeField" prefWidth="89.0" text="Type" />
+            <TableColumn fx:id="totalApptField" prefWidth="128.0" text="Total Appointments" />
+        </columns>
+      </TableView>
+      <TableView layoutX="435.0" layoutY="334.0" prefHeight="200.0" prefWidth="240.0">
+        <columns>
+          <TableColumn fx:id="custStateField" prefWidth="113.0" text="State/Province" />
+          <TableColumn fx:id="totalCustField" prefWidth="126.0" text="Total Customers" />
+        </columns>
+      </TableView>
+      <ChoiceBox fx:id="contactChoice" layoutX="349.0" layoutY="45.0" prefWidth="150.0" />
+      <Label layoutX="275.0" layoutY="47.0" text="Contact">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="38.0" layoutY="37.0" text="Reports">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Button fx:id="reportsExitButton" layoutX="727.0" layoutY="406.0" mnemonicParsing="false" onAction="#reportsExitButtonClicked" prefHeight="41.0" prefWidth="82.0" text="Exit">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Label layoutX="435.0" layoutY="310.0" text="Customers by State/Province" />
+      <Label layoutX="38.0" layoutY="310.0" text="Appointments by Month &amp; Type" />
+      <Label layoutX="38.0" layoutY="70.0" text="Employee Schedule" />
+   </children>
 </AnchorPane>
