@@ -21,6 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.Initializable;
+import sample.model.Appointment;
+import sample.model.Customer;
 
 
 import java.awt.*;
@@ -40,28 +42,28 @@ public class mainScreenController implements Initializable{
     @FXML private RadioButton appointmentByWeekRadio;
     @FXML private RadioButton appointmentByMonthRadio;
     @FXML private RadioButton appointmentAllRadio;
-    @FXML private TableView appointmentTable;
-    @FXML private TableView customerTable;
-    @FXML private TableColumn appointmentIdColumn;
-    @FXML private TableColumn appointmentTitleColumn;
-    @FXML private TableColumn appointmentDescriptionColumn;
-    @FXML private TableColumn appointmentLocationColumn;
-    @FXML private TableColumn appointmentStartColumn;
-    @FXML private TableColumn appointmentEndColumn;
-    @FXML private TableColumn appointmentCustomerIdColumn;
-    @FXML private TableColumn appointmentContactColumn;
-    @FXML private TableColumn appointmentTypeColumn;
-    @FXML private TableColumn appointmentUserIdColumn;
-    @FXML private TableColumn customerIdColumn;
-    @FXML private TableColumn customerNameColumn;
-    @FXML private TableColumn customerAddressColumn;
-    @FXML private TableColumn customerPostalColumn;
-    @FXML private TableColumn customerPhoneColumn;
-    @FXML private TableColumn customerStateColumn;
-    @FXML private TableColumn customerCreatedDateColumn;
-    @FXML private TableColumn customerCreatedByColumn;
-    @FXML private TableColumn customerLastUpdateColumn;
-    @FXML private TableColumn customerLastUpdatedByColumn;
+    @FXML private TableView<Appointment> appointmentTable;
+    @FXML private TableView<Customer> customerTable;
+    @FXML private TableColumn<Appointment, Integer> appointmentIdColumn;
+    @FXML private TableColumn<Appointment, String> appointmentTitleColumn;
+    @FXML private TableColumn<Appointment, String> appointmentDescriptionColumn;
+    @FXML private TableColumn<Appointment, String> appointmentLocationColumn;
+    @FXML private TableColumn<Appointment, String> appointmentStartColumn;
+    @FXML private TableColumn<Appointment, String> appointmentEndColumn;
+    @FXML private TableColumn<Appointment, String> appointmentCustomerIdColumn;
+    @FXML private TableColumn<Appointment, String> appointmentContactColumn;
+    @FXML private TableColumn<Appointment, String> appointmentTypeColumn;
+    @FXML private TableColumn<Appointment, Integer> appointmentUserIdColumn;
+    @FXML private TableColumn<Customer, Integer> customerIdColumn;
+    @FXML private TableColumn<Customer, String> customerNameColumn;
+    @FXML private TableColumn<Customer, String> customerAddressColumn;
+    @FXML private TableColumn<Customer, String> customerPostalColumn;
+    @FXML private TableColumn<Customer, String> customerPhoneColumn;
+    @FXML private TableColumn<Customer, String> customerStateColumn;
+    @FXML private TableColumn<Customer, String> customerCreatedDateColumn;
+    @FXML private TableColumn<Customer, String> customerCreatedByColumn;
+    @FXML private TableColumn<Customer, String> customerLastUpdateColumn;
+    @FXML private TableColumn<Customer, String> customerLastUpdatedByColumn;
     @FXML private Button addApptButton;
     @FXML private Button updateApptButton;
     @FXML private Button deleteApptButton;
@@ -84,13 +86,6 @@ public class mainScreenController implements Initializable{
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(mainScreenScene);
         window.show();
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        appointmentAllRadio.setSelected(true);
-
     }
 
     /**
@@ -161,6 +156,14 @@ public class mainScreenController implements Initializable{
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(mainScreenScene);
         window.show();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        appointmentAllRadio.setSelected(true);
+
+
     }
 }
 
