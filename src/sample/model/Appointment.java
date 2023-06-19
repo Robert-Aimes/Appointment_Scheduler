@@ -38,6 +38,8 @@ public class Appointment {
         this.contactId = contactId;
     }
 
+
+
     //Getters and Setters
 
     /**

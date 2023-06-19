@@ -1,6 +1,7 @@
 package sample.controller;
 
 import com.sun.javafx.stage.EmbeddedWindow;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import sample.DAO.AppointmentDb;
 import sample.DAO.JDBC;
 import sample.main.Main;
 
@@ -160,6 +163,25 @@ public class mainScreenController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        try {
+            appointmentTable.setItems(AppointmentDb.getAllAppointments());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("apptId"));
+        appointmentTitleColumn.setCellValueFactory(new PropertyValueFactory<>("apptTitle"));
+        appointmentDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("apptDescription"));
+        appointmentLocationColumn.setCellValueFactory(new PropertyValueFactory<>("apptLocation"));
+        appointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("apptType"));
+        appointmentStartColumn.setCellValueFactory(new PropertyValueFactory<>("apptStartTime"));
+        appointmentEndColumn.setCellValueFactory(new PropertyValueFactory<>("apptEndTime"));
+        appointmentCustomerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        appointmentContactColumn.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+        appointmentUserIdColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
+
 
         appointmentAllRadio.setSelected(true);
 
