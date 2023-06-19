@@ -66,7 +66,7 @@ public class AppointmentDb {
         return appointmentList;
     }
 
-    public static void deleteAppointment(int apptId, Connection connection) throws SQLException{
+    public static void deleteAppointment(int apptId) throws SQLException{
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1, apptId);

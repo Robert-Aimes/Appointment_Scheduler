@@ -58,4 +58,12 @@ public class CustomerDb {
 
         return customerList;
     }
+
+    public void deleteCustomer(int custId) throws SQLException{
+        String query = "DELETE FROM customers WHERE Customer_ID=?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, custId);
+        ps.executeUpdate();
+        ps.close();
+    }
 }

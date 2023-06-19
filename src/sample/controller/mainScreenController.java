@@ -105,6 +105,7 @@ public class mainScreenController implements Initializable{
         window.show();
     }
 
+
     /**
      * Switches screen to add customer screen
      * @param actionEvent
@@ -160,6 +161,28 @@ public class mainScreenController implements Initializable{
         Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         window.setScene(mainScreenScene);
         window.show();
+    }
+
+
+    /**
+     * Handles functionality to delete an appointment from the database and tableview
+     * @param actionEvent
+     * @throws IOException
+     */
+    public void deleteApptButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
+        Appointment selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
+        if (selectedAppointment == null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select an Appointment from the Appointment table.", ButtonType.OK);
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to delete this Appointment?", ButtonType.YES, ButtonType.NO);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
+                int selectedAppointmentId = selectedAppointment.getApptId();
+                AppointmentDb.deleteAppointment(selectedAppointmentId);
+
+            }
+        }
     }
 
     @Override
