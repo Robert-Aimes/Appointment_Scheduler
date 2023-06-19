@@ -169,7 +169,7 @@ public class mainScreenController implements Initializable{
      * @param actionEvent
      * @throws IOException
      */
-    public void deleteApptButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
+    public void deleteAppointmentButtonClicked(ActionEvent actionEvent) throws SQLException {
         Appointment selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
         if (selectedAppointment == null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select an Appointment from the Appointment table.", ButtonType.OK);
@@ -180,10 +180,13 @@ public class mainScreenController implements Initializable{
             if (alert.getResult() == ButtonType.YES) {
                 int selectedAppointmentId = selectedAppointment.getApptId();
                 AppointmentDb.deleteAppointment(selectedAppointmentId);
+                ObservableList<Appointment> allAppointments = AppointmentDb.getAllAppointments();
+                appointmentTable.setItems(allAppointments);
 
             }
         }
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -228,6 +231,8 @@ public class mainScreenController implements Initializable{
 
 
     }
+
+
 }
 
 

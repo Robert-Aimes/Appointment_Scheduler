@@ -22,7 +22,8 @@ public class Appointment {
     private int userId;
     private int contactId;
 
-    public Appointment(String apptTitle, String apptDescription, String apptLocation, String apptType, LocalDateTime apptStartTime, LocalDateTime apptEndTime, LocalDateTime apptCreateDate, String apptCreatedBy, LocalDateTime apptLastUpdate, String apptLastUpdatedBy, int customerId, int userId, int contactId) {
+    public Appointment(int apptId, String apptTitle, String apptDescription, String apptLocation, String apptType, LocalDateTime apptStartTime, LocalDateTime apptEndTime, LocalDateTime apptCreateDate, String apptCreatedBy, LocalDateTime apptLastUpdate, String apptLastUpdatedBy, int customerId, int userId, int contactId) {
+        this.apptId = apptId;
         this.apptTitle = apptTitle;
         this.apptDescription = apptDescription;
         this.apptLocation = apptLocation;

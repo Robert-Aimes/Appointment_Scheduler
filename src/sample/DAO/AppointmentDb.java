@@ -45,6 +45,7 @@ public class AppointmentDb {
             int contactId = resultSet.getInt("Contact_ID");
 
             Appointment appointment = new Appointment(
+                    apptId,
                     apptTitle,
                     apptDescription,
                     apptLocation,
@@ -67,11 +68,18 @@ public class AppointmentDb {
     }
 
     public static void deleteAppointment(int apptId) throws SQLException{
+        Connection connection = JDBC.openConnection();
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1, apptId);
-        ps.executeUpdate();
-        ps.close();
+        int rowsAffected = ps.executeUpdate();
+
+        if (rowsAffected > 0) {
+            System.out.println("Appointment deleted successfully.");
+        } else {
+            System.out.println("No appointment found with the given ID.");
+        }
+
 
     }
 

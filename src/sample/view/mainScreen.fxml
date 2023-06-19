@@ -48,7 +48,7 @@
       </TableView>
       <Button fx:id="addApptButton" layoutX="182.0" layoutY="377.0" mnemonicParsing="false" onAction="#addApptButtonClicked" text="Add Appointment" />
       <Button fx:id="updateApptButton" layoutX="348.0" layoutY="377.0" mnemonicParsing="false" onAction="#modifyApptButtonClicked" text="Update Appointment" />
-      <Button fx:id="deleteApptButton" layoutX="531.0" layoutY="377.0" mnemonicParsing="false" text="Delete Appointment" />
+      <Button fx:id="deleteApptButton" layoutX="531.0" layoutY="377.0" mnemonicParsing="false" onAction="#deleteAppointmentButtonClicked" text="Delete Appointment" />
       <Button fx:id="adjustApptTimeButton" layoutX="717.0" layoutY="377.0" mnemonicParsing="false" text="Adjust Appoinment Time" />
       <Label layoutX="67.0" layoutY="432.0" text="Customers">
          <font>
