@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.DAO.AppointmentDb;
+import sample.DAO.CustomerDb;
 import sample.DAO.JDBC;
 import sample.main.Main;
 
@@ -180,6 +181,23 @@ public class mainScreenController implements Initializable{
         appointmentCustomerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         appointmentContactColumn.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         appointmentUserIdColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
+        try {
+            customerTable.setItems(CustomerDb.getAllCustomers());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("custId"));
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("custName"));
+        customerAddressColumn.setCellValueFactory(new PropertyValueFactory<>("custAddress"));
+        customerPostalColumn.setCellValueFactory(new PropertyValueFactory<>("custPostalCode"));
+        customerPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("custPhone"));
+        customerStateColumn.setCellValueFactory(new PropertyValueFactory<>("custDivisionName"));
+        customerCreatedDateColumn.setCellValueFactory(new PropertyValueFactory<>("custCreateDate"));
+        customerCreatedByColumn.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
+        customerLastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("custLastUpdate"));
+        customerLastUpdatedByColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdatedBy"));
 
 
 
