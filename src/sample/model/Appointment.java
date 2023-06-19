@@ -7,149 +7,256 @@ import javafx.beans.property.ObjectProperty;
 import java.time.LocalDateTime;
 
 public class Appointment {
-    private IntegerProperty appointmentId;
-    private StringProperty title;
-    private StringProperty description;
-    private StringProperty location;
-    private StringProperty type;
-    private ObjectProperty<LocalDateTime> start;
-    private ObjectProperty<LocalDateTime> end;
-    private ObjectProperty<LocalDateTime> createDate;
-    private StringProperty createdBy;
-    private ObjectProperty<LocalDateTime> lastUpdate;
-    private StringProperty lastUpdatedBy;
-    private IntegerProperty customerId;
-    private IntegerProperty userId;
-    private IntegerProperty contactId;
+    private int apptId;
+    private String apptTitle;
+    private String apptDescription;
+    private String apptLocation;
+    private String apptType;
+    private LocalDateTime apptStartTime;
+    private LocalDateTime apptEndTime;
+    private LocalDateTime apptCreateDate;
+    private String apptCreatedBy;
+    private LocalDateTime apptLastUpdate;
+    private String apptLastUpdatedBy;
+    private int customerId;
+    private int userId;
+    private int contactId;
 
-
-    public IntegerProperty getAppointmentId() {
-        return appointmentId;
-    }
-
-    public void setAppointmentId(IntegerProperty appointmentId) {
-        this.appointmentId = appointmentId;
-    }
-
-    public StringProperty getTitle() {
-        return title;
-    }
-
-    public void setTitle(StringProperty title) {
-        this.title = title;
-    }
-
-    public StringProperty getDescription() {
-        return description;
-    }
-
-    public void setDescription(StringProperty description) {
-        this.description = description;
-    }
-
-    public StringProperty getLocation() {
-        return location;
-    }
-
-    public void setLocation(StringProperty location) {
-        this.location = location;
-    }
-
-    public StringProperty getType() {
-        return type;
-    }
-
-    public void setType(StringProperty type) {
-        this.type = type;
-    }
-
-    public LocalDateTime getStart() {
-        return start.get();
-    }
-
-    public ObjectProperty<LocalDateTime> startProperty() {
-        return start;
-    }
-
-    public void setStart(LocalDateTime start) {
-        this.start.set(start);
-    }
-
-    public LocalDateTime getEnd() {
-        return end.get();
-    }
-
-    public ObjectProperty<LocalDateTime> endProperty() {
-        return end;
-    }
-
-    public void setEnd(LocalDateTime end) {
-        this.end.set(end);
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate.get();
-    }
-
-    public ObjectProperty<LocalDateTime> createDateProperty() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate.set(createDate);
-    }
-
-    public StringProperty getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(StringProperty createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate.get();
-    }
-
-    public ObjectProperty<LocalDateTime> lastUpdateProperty() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate.set(lastUpdate);
-    }
-
-    public StringProperty getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(StringProperty lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
-    }
-
-    public IntegerProperty getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(IntegerProperty customerId) {
+    public Appointment(String apptTitle, String apptDescription, String apptLocation, String apptType, LocalDateTime apptStartTime, LocalDateTime apptEndTime, LocalDateTime apptCreateDate, String apptCreatedBy, LocalDateTime apptLastUpdate, String apptLastUpdatedBy, int customerId, int userId, int contactId) {
+        this.apptTitle = apptTitle;
+        this.apptDescription = apptDescription;
+        this.apptLocation = apptLocation;
+        this.apptType = apptType;
+        this.apptStartTime = apptStartTime;
+        this.apptEndTime = apptEndTime;
+        this.apptCreateDate = apptCreateDate;
+        this.apptCreatedBy = apptCreatedBy;
+        this.apptLastUpdate = apptLastUpdate;
+        this.apptLastUpdatedBy = apptLastUpdatedBy;
         this.customerId = customerId;
-    }
-
-    public IntegerProperty getUserId() {
-        return userId;
-    }
-
-    public void setUserId(IntegerProperty userId) {
         this.userId = userId;
-    }
-
-    public IntegerProperty getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(IntegerProperty contactId) {
         this.contactId = contactId;
     }
 
+    //Getters and Setters
 
+    /**
+     * return apptId
+     * @return
+     */
+    public int getApptId() {
+        return apptId;
+    }
+
+    /**
+     * set apptId
+     * @param apptId
+     */
+    public void setApptId(int apptId) {
+        this.apptId = apptId;
+    }
+
+    /**
+     *
+     * @return apptTitle
+     */
+    public String getApptTitle() {
+        return apptTitle;
+    }
+
+    /**
+     *
+     * @param apptTitle
+     */
+    public void setApptTitle(String apptTitle) {
+        this.apptTitle = apptTitle;
+    }
+
+    /**
+     *
+     * @return apptDescription
+     */
+    public String getApptDescription() {
+        return apptDescription;
+    }
+
+    /**
+     *
+     * @param apptDescription
+     */
+    public void setApptDescription(String apptDescription) {
+        this.apptDescription = apptDescription;
+    }
+
+    /**
+     *
+     * @return apptLocation
+     */
+    public String getApptLocation() {
+        return apptLocation;
+    }
+
+    /**
+     *
+     * @param apptLocation
+     */
+    public void setApptLocation(String apptLocation) {
+        this.apptLocation = apptLocation;
+    }
+
+    /**
+     *
+     * @return apptType
+     */
+    public String getApptType() {
+        return apptType;
+    }
+
+    public void setApptType(String apptType) {
+        this.apptType = apptType;
+    }
+
+    /**
+     *
+     * @return apptStartTime
+     */
+    public LocalDateTime getApptStartTime() {
+        return apptStartTime;
+    }
+
+    /**
+     *
+     * @param apptStartTime
+     */
+    public void setApptStartTime(LocalDateTime apptStartTime) {
+        this.apptStartTime = apptStartTime;
+    }
+
+    /**
+     *
+     * @return apptEndTime
+     */
+    public LocalDateTime getApptEndTime() {
+        return apptEndTime;
+    }
+
+    /**
+     *
+     * @param apptEndTime
+     */
+    public void setApptEndTime(LocalDateTime apptEndTime) {
+        this.apptEndTime = apptEndTime;
+    }
+
+    /**
+     *
+     * @return apptCreatedDate
+     */
+    public LocalDateTime getApptCreateDate() {
+        return apptCreateDate;
+    }
+
+    /**
+     *
+     * @param apptCreateDate
+     */
+    public void setApptCreateDate(LocalDateTime apptCreateDate) {
+        this.apptCreateDate = apptCreateDate;
+    }
+
+    /**
+     *
+     * @return apptCreatedBy
+     */
+    public String getApptCreatedBy() {
+        return apptCreatedBy;
+    }
+
+    /**
+     *
+     * @param apptCreatedBy
+     */
+    public void setApptCreatedBy(String apptCreatedBy) {
+        this.apptCreatedBy = apptCreatedBy;
+    }
+
+    /**
+     *
+     * @return apptLatUpdate
+     */
+    public LocalDateTime getApptLastUpdate() {
+        return apptLastUpdate;
+    }
+
+    /**
+     *
+     * @param apptLastUpdate
+     */
+    public void setApptLastUpdate(LocalDateTime apptLastUpdate) {
+        this.apptLastUpdate = apptLastUpdate;
+    }
+
+    /**
+     *
+     * @return apptLastUpdatedBy
+     */
+    public String getApptLastUpdatedBy() {
+        return apptLastUpdatedBy;
+    }
+
+    /**
+     *
+     * @param apptLastUpdatedBy
+     */
+    public void setApptLastUpdatedBy(String apptLastUpdatedBy) {
+        this.apptLastUpdatedBy = apptLastUpdatedBy;
+    }
+
+    /**
+     *
+     * @return customerId
+     */
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    /**
+     *
+     * @param customerId
+     */
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    /**
+     *
+     * @return userId
+     */
+    public int getUserId() {
+        return userId;
+    }
+
+    /**
+     *
+     * @param userId
+     */
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    /**
+     *
+     * @return contactId
+     */
+    public int getContactId() {
+        return contactId;
+    }
+
+    /**
+     *
+     * @param contactId
+     */
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
+    }
 }
