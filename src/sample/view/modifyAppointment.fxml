@@ -43,7 +43,7 @@
                 <Font size="16.0" />
             </font>
         </Label>
-        <ChoiceBox fx:id="modifyApptStartTimeChoice" layoutX="163.0" layoutY="423.0" prefWidth="150.0" />
+        <ComboBox fx:id="modifyApptStartTimeChoice" layoutX="163.0" layoutY="423.0" prefWidth="150.0" />
         <Label layoutX="62.0" layoutY="199.0" text="Type">
             <font>
                 <Font size="16.0" />
@@ -84,6 +84,6 @@
             </font>
         </Label>
         <Button fx:id="modifyApptSaveButton" layoutX="162.0" layoutY="744.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="61.0" text="Save" />
-        <Button fx:id="modifyApptCancelButton" layoutX="261.0" layoutY="744.0" mnemonicParsing="false" text="Cancel" />
+        <Button fx:id="modifyApptCancelButton" layoutX="261.0" layoutY="744.0" mnemonicParsing="false" onAction="#cancelButtonClicked" text="Cancel" />
     </children>
 </AnchorPane>
