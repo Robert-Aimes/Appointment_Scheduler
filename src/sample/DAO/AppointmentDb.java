@@ -17,7 +17,7 @@ public class AppointmentDb {
 
 
     /**
-     * Creating observvable list for all appointments in the database to have to populate the tableview.
+     * Creating observable list for all appointments in the database to have to populate the tableview.
      * @return
      * @throws SQLException
      */
