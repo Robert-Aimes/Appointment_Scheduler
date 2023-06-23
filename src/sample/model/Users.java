@@ -5,11 +5,13 @@ public class Users {
     public String userName;
     public String userPassword;
 
-    public Users() {
+    public Users(int userId, String userName, String userPassword) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
     }
+
+
 
     //Getters and Setters
 
