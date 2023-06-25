@@ -1,5 +1,6 @@
 package sample.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,7 +19,10 @@ import sample.model.Customer;
 import sample.model.Users;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalTime;
+import java.util.ResourceBundle;
 
 public class addAppointmentController {
     @FXML
@@ -36,9 +40,9 @@ public class addAppointmentController {
     @FXML
     private DatePicker addApptEndDatePicker;
     @FXML
-    private ComboBox addApptStartTimeChoice;
+    private ComboBox<LocalTime> addApptStartTimeChoice;
     @FXML
-    private ComboBox addApptEndTimeChoice;
+    private ComboBox<LocalTime> addApptEndTimeChoice;
     @FXML
     private ComboBox<Integer> addApptCustomerIdChoice;
     @FXML
@@ -61,6 +65,31 @@ public class addAppointmentController {
             window.setScene(mainScreenScene);
             window.show();
         }
+    }
+
+    private void populateTimeChoices() {
+        // Set the initial time to 00:00 (midnight)
+        LocalTime startTime = LocalTime.of(0, 0);
+
+        // Set the increment value for the time options (15 minutes)
+        int minutesIncrement = 15;
+
+        // Calculate the number of time options for 24 hours (60 minutes / increment)
+        int numTimeOptions = 24 * 60 / minutesIncrement;
+
+        // Create a list to store the time options
+        ObservableList<LocalTime> timeOptions = FXCollections.observableArrayList();
+
+        // Generate the time options in increments of 15 minutes
+        for (int i = 0; i < numTimeOptions; i++) {
+            timeOptions.add(startTime);
+            startTime = startTime.plusMinutes(minutesIncrement);
+        }
+
+        // Set the time options for the ComboBoxes
+        addApptStartTimeChoice.setItems(timeOptions);
+        addApptEndTimeChoice.setItems(timeOptions);
+
     }
 
     @FXML
@@ -89,6 +118,7 @@ public class addAppointmentController {
         addApptContactChoice.setItems(contactNamesList);
         addApptUserIdChoice.setItems(userIDList);
         addApptCustomerIdChoice.setItems(customerIDList);
+        populateTimeChoices();
 
     }
 }
