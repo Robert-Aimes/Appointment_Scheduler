@@ -18,6 +18,7 @@ import sample.model.Contacts;
 import sample.model.Customer;
 import sample.model.Users;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -54,7 +55,21 @@ public class addAppointmentController {
     @FXML
     private Button addApptCancelButton;
 
+    /**
+     * Method to handle functionality when save button is clicked. Populate Appointment database table with all new appt data.
+     * @param actionEvent
+     * @throws IOException
+     */
 
+    public void saveButtonClicked(Action actionEvent) throws IOException{
+
+    }
+
+    /**
+     * Method to handle when cancel button is clicked and return back to the main screen
+     * @param actionEvent
+     * @throws IOException
+     */
     public void cancelButtonClicked(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to cancel adding an Appointment?", ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
@@ -67,6 +82,9 @@ public class addAppointmentController {
         }
     }
 
+    /**
+     * Method created to populate the start and end time combo boxes
+     */
     private void populateTimeChoices() {
         // Set the initial time to 00:00 (midnight)
         LocalTime startTime = LocalTime.of(0, 0);
@@ -92,6 +110,10 @@ public class addAppointmentController {
 
     }
 
+    /**
+     * initialize method to populate the different combo boxes from database table queries
+     * @throws SQLException
+     */
     @FXML
     public void initialize() throws SQLException {
         ObservableList<Contacts> contactsList = ContactsDb.getAllContacts();
