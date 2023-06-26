@@ -1,8 +1,6 @@
 package sample.model;
 
-import com.mysql.cj.conf.IntegerProperty;
-import com.mysql.cj.conf.StringProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDateTime;
 

@@ -67,6 +67,25 @@ public class addAppointmentController {
             LocalDate startDate = addApptStartDatePicker.getValue();
             LocalDate endDate = addApptEndDatePicker.getValue();
 
+            // Check if the start date is after the end date
+            if (startDate.isAfter(endDate)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The start date cannot be after the end date.", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
+
+            // Check if the start date is the same as the end date
+            if (startDate.isEqual(endDate)) {
+                // Check if the start time is after the end time
+                if (apptStartTime.isAfter(apptEndTime)) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "The start time cannot be after the end time on the same day.", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+            // Rest of your code...
+
             // Combine the selected date and time into LocalDateTime objects
             LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
             LocalDateTime endDateTime = LocalDateTime.of(endDate, apptEndTime);

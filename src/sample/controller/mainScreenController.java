@@ -138,11 +138,30 @@ public class mainScreenController implements Initializable{
      * @throws IOException
      */
     public void modifyApptButtonClicked(ActionEvent actionEvent) throws IOException {
-        Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/modifyAppointment.fxml"));
-        Scene mainScreenScene = new Scene(mainScreenWindow);
-        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-        window.setScene(mainScreenScene);
-        window.show();
+
+        try {
+            Appointment selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
+            if (selectedAppointment == null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select an Appointment to update.", ButtonType.OK);
+                alert.showAndWait();
+            } else {
+
+                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/modifyAppointment.fxml"));
+                Parent scene = loader.load();
+                modifyAppointmentController controller = loader.getController();
+                controller.setAppointment(selectedAppointment);
+                stage.setTitle("Update Appointment");
+                stage.setScene(new Scene(scene));
+                stage.show();
+
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+
+        }
     }
 
 
