@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.Initializable;
+import sample.model.SharedData;
 
 
 import java.awt.*;
@@ -59,6 +60,8 @@ public class loginFormController implements Initializable{
 
         boolean isAuthenticated = authenticateUser(enteredUsername, enteredPassword);
 
+
+
         if(enteredUsername.equals("") || enteredPassword.equals("")){
             Locale locale = Locale.getDefault();
             if (locale.getLanguage().equals("fr")) {
@@ -73,6 +76,7 @@ public class loginFormController implements Initializable{
             }
         }
         else if(isAuthenticated){
+            SharedData.setEnteredUsername(enteredUsername);
             Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
             Scene mainScreenScene = new Scene(mainScreenWindow);
             Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();

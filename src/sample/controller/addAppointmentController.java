@@ -11,19 +11,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import sample.DAO.AppointmentDb;
-import sample.DAO.ContactsDb;
-import sample.DAO.CustomerDb;
-import sample.DAO.UsersDb;
-import sample.model.Appointment;
-import sample.model.Contacts;
-import sample.model.Customer;
-import sample.model.Users;
+import sample.DAO.*;
+import sample.model.*;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -125,7 +119,11 @@ public class addAppointmentController {
             String apptTitle = addApptTitleField.getText();
             int customerId = addApptCustomerIdChoice.getValue();
             int userId = addApptUserIdChoice.getValue();
-            String contact = addApptContactChoice.getValue();
+            String contactName = addApptContactChoice.getValue();
+            String createdBy = SharedData.getEnteredUsername();
+            String lastUpdatedBy = createdBy;
+
+            int contactId = getContactIdByName(contactName);
 
             LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -133,11 +131,43 @@ public class addAppointmentController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String createdDateTime = currentDateTime.format(formatter);
 
-            //Get Contact ID from contact name
 
-            //Get UserID
 
-            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime, utcEndDateTime, createdDateTime, contact, createdDateTime, contact, customerId, userId, int contactId);
+
+
+            //Get UserID need to have query getting the ID from the entered username in logincontroller
+
+            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime, utcEndDateTime, currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
+
+            String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            Connection connection = JDBC.openConnection();
+            PreparedStatement ps = connection.prepareStatement(insertStatement);
+            ps.setInt(1, apptId);
+            ps.setString(2, apptTitle);
+            ps.setString(3, apptDescription);
+            ps.setString(4, apptLocation);
+            ps.setString(5,apptType);
+            //ps.setTimestamp(6, Timestamp.valueOf(startLocalDateTimeToAdd));
+            ps.setTimestamp(6, Timestamp.valueOf(utcStartDateTime));
+            ps.setTimestamp(7, Timestamp.valueOf(utcEndDateTime));
+            //need to verify this is correct
+            ps.setTimestamp(8, Timestamp.valueOf(currentDateTime));
+            ps.setString(9, createdBy);
+            ps.setTimestamp(10, Timestamp.valueOf(currentDateTime));
+            ps.setString(11, lastUpdatedBy);
+            ps.setInt(12, customerId);
+            ps.setInt(13, contactId);
+            ps.setInt(14,userId);
+
+            //System.out.println("ps " + ps);
+            ps.execute();
+
+            Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
+            Scene mainScreenScene = new Scene(mainScreenWindow);
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            window.setScene(mainScreenScene);
+            window.show();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,12 +219,35 @@ public class addAppointmentController {
 
     }
 
+    /**
+     * Method to create a new appt ID
+     * @return
+     * @throws SQLException
+     */
     public static int getNewID() throws SQLException {
         int apptID = 1;
         for(int i = 0; i < AppointmentDb.getAllAppointments().size(); i++){
             apptID++;
         }
         return apptID;
+    }
+
+    /**
+     * Method to find contactID given the contact name from the combobox
+     * @param contactName
+     * @return
+     * @throws SQLException
+     */
+    public static int getContactIdByName(String contactName) throws SQLException {
+        int contactID = -1;
+        ObservableList<Contacts> contactsList = ContactsDb.getAllContacts();
+        for(Contacts contact : contactsList) {
+            if (contact.getContactName().equals(contactName)) {
+                contactID = contact.getContactId();
+                break;
+            }
+        }
+        return contactID;
     }
 
     /**
