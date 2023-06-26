@@ -112,7 +112,7 @@ public class addAppointmentController {
                 }
             }
 
-            int apptId = getNewID();
+            int apptId = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
             String apptType = addApptTypeField.getText();
             String apptDescription = addApptDescriptionField.getText();
             String apptLocation = addApptLocationField.getText();
@@ -130,10 +130,6 @@ public class addAppointmentController {
             // Format the current date and time as a string
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String createdDateTime = currentDateTime.format(formatter);
-
-
-
-
 
             //Get UserID need to have query getting the ID from the entered username in logincontroller
 
@@ -158,7 +154,7 @@ public class addAppointmentController {
             ps.setString(11, lastUpdatedBy);
             ps.setInt(12, customerId);
             ps.setInt(13, contactId);
-            ps.setInt(14,userId);
+            ps.setInt(14, userId);
 
             //System.out.println("ps " + ps);
             ps.execute();
@@ -225,11 +221,15 @@ public class addAppointmentController {
      * @throws SQLException
      */
     public static int getNewID() throws SQLException {
-        int apptID = 1;
-        for(int i = 0; i < AppointmentDb.getAllAppointments().size(); i++){
-            apptID++;
+        int newApptID = 0;
+        ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
+        for(Appointment appointment : apptList){
+            int apptID = appointment.getApptId();
+            if(apptID > newApptID){
+                newApptID = apptID + 1;
+            }
         }
-        return apptID;
+        return newApptID;
     }
 
     /**
@@ -239,6 +239,7 @@ public class addAppointmentController {
      * @throws SQLException
      */
     public static int getContactIdByName(String contactName) throws SQLException {
+
         int contactID = -1;
         ObservableList<Contacts> contactsList = ContactsDb.getAllContacts();
         for(Contacts contact : contactsList) {
