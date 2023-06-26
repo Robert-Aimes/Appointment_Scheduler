@@ -102,13 +102,18 @@ public class addAppointmentController {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
 
-                if ((utcStartDateTime.isAfter(existingStartDateTime) && utcStartDateTime.isBefore(existingEndDateTime)) ||
-                        (utcEndDateTime.isAfter(existingStartDateTime) && utcEndDateTime.isBefore(existingEndDateTime)) ||
-                        (utcStartDateTime.isEqual(existingStartDateTime) || utcEndDateTime.isEqual(existingEndDateTime))) {
-                    // Display an error message for overlapping appointments
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
-                    alert.showAndWait();
-                    return;
+                // Check if the appointments belong to the same customer
+                if (appointment.getCustomerId() == addApptCustomerIdChoice.getValue()) {
+                    // Check for overlapping appointments
+                    if ((utcStartDateTime.isAfter(existingStartDateTime) && utcStartDateTime.isBefore(existingEndDateTime)) ||
+                            (utcEndDateTime.isAfter(existingStartDateTime) && utcEndDateTime.isBefore(existingEndDateTime)) ||
+                            (utcStartDateTime.isEqual(existingStartDateTime) || utcEndDateTime.isEqual(existingEndDateTime))) {
+
+                        // Display an error message for overlapping appointments
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
+                        alert.showAndWait();
+                        return;
+                    }
                 }
             }
 
@@ -153,8 +158,8 @@ public class addAppointmentController {
             ps.setTimestamp(10, Timestamp.valueOf(currentDateTime));
             ps.setString(11, lastUpdatedBy);
             ps.setInt(12, customerId);
-            ps.setInt(13, contactId);
-            ps.setInt(14, userId);
+            ps.setInt(13, userId);
+            ps.setInt(14, contactId);
 
             //System.out.println("ps " + ps);
             ps.execute();
