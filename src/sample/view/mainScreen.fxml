@@ -21,12 +21,12 @@
             <TableColumn prefWidth="75.0" text="Column X" />
         </columns>
       </TableView>
-      <RadioButton fx:id="appointmentByWeekRadio" layoutX="447.0" layoutY="75.0" mnemonicParsing="false" text="Week">
+      <RadioButton fx:id="appointmentByWeekRadio" layoutX="447.0" layoutY="75.0" mnemonicParsing="false" onAction="#radioButtonAction" text="Week">
          <toggleGroup>
             <ToggleGroup fx:id="appointmentFilterToggleGroup" />
          </toggleGroup></RadioButton>
-      <RadioButton fx:id="appointmentByMonthRadio" layoutX="583.0" layoutY="75.0" mnemonicParsing="false" text="Month" toggleGroup="$appointmentFilterToggleGroup" />
-      <RadioButton fx:id="appointmentAllRadio" layoutX="725.0" layoutY="75.0" mnemonicParsing="false" text="All" toggleGroup="$appointmentFilterToggleGroup" />
+      <RadioButton fx:id="appointmentByMonthRadio" layoutX="583.0" layoutY="75.0" mnemonicParsing="false" onAction="#radioButtonAction" text="Month" toggleGroup="$appointmentFilterToggleGroup" />
+      <RadioButton fx:id="appointmentAllRadio" layoutX="725.0" layoutY="75.0" mnemonicParsing="false" onAction="#radioButtonAction" text="All" toggleGroup="$appointmentFilterToggleGroup" />
       <Label layoutX="67.0" layoutY="71.0" text="Appointments">
          <font>
             <Font name="System Bold" size="17.0" />

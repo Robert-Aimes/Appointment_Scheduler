@@ -2,6 +2,7 @@ package sample.controller;
 
 import com.sun.javafx.stage.EmbeddedWindow;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,16 +30,21 @@ import sample.model.Appointment;
 import sample.model.Customer;
 
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.ResourceBundle;
 import java.util.Locale;
 import java.util.TimeZone;
-
-
+import java.util.function.Predicate;
 
 
 public class mainScreenController implements Initializable{
@@ -78,7 +84,41 @@ public class mainScreenController implements Initializable{
     @FXML private Button reportButton;
     @FXML private Button logoutButton;
 
+    /**
+     * Method to handle the selection of the different radio buttons above the Appointment TableView
+     * @param actionEvent
+     */
+    public void radioButtonAction(ActionEvent actionEvent) throws SQLException {
+        if(appointmentByMonthRadio.isSelected()){
+            LocalDateTime dateTime = LocalDateTime.now();
+            Month currentMonth = dateTime.getMonth();
 
+            Predicate<Appointment> inCurrentMonth = appointment ->
+                    appointment.getApptStartTime().getMonth() == currentMonth;
+
+// Apply the Predicate to the appointmentList and set the filtered data to the TableView
+            ObservableList<Appointment> monthlyAppointments = AppointmentDb.getAllAppointments();
+            appointmentTable.setItems(monthlyAppointments.filtered(inCurrentMonth));
+        } else if(appointmentByWeekRadio.isSelected()){
+            ObservableList<Appointment> weeklyAppointments = AppointmentDb.getAllAppointments();
+            FilteredList<Appointment> filteredAppointments = new FilteredList<>(weeklyAppointments);
+            filteredAppointments.setPredicate(appointment -> {
+                LocalDateTime startTime = appointment.getApptStartTime();
+                LocalDate startDate = startTime.toLocalDate();
+                LocalDate currentDate = LocalDate.now();
+                WeekFields weekFields = WeekFields.of(Locale.getDefault());
+                int currentWeekNumber = currentDate.get(weekFields.weekOfWeekBasedYear());
+                int appointmentWeekNumber = startDate.get(weekFields.weekOfWeekBasedYear());
+                return appointmentWeekNumber == currentWeekNumber;
+
+            });
+            appointmentTable.setItems(filteredAppointments);
+
+        } else if(appointmentAllRadio.isSelected()){
+            ObservableList<Appointment> allAppointments = AppointmentDb.getAllAppointments();
+            appointmentTable.setItems(allAppointments);
+        }
+    }
     /**
      * Switches screen to add appointment screen
      * @param actionEvent
