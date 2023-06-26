@@ -195,6 +195,12 @@ public class modifyAppointmentController {
         }
     }
 
+    /**
+     * Method to convert the contact ID from the database table into the contact name to populate the combo box
+     * @param contactName
+     * @return
+     * @throws SQLException
+     */
     private int getContactIdByName(String contactName) throws SQLException {
         int contactID = -1;
         ObservableList<Contacts> contactsList = ContactsDb.getAllContacts();
@@ -220,7 +226,11 @@ public class modifyAppointmentController {
 
     }
 
-
+    /**
+     * Method to return user back to the main screen
+     * @param actionEvent
+     * @throws IOException
+     */
     public void cancelButtonClicked(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to cancel updateing this Appointment?", ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
@@ -233,6 +243,11 @@ public class modifyAppointmentController {
         }
     }
 
+    /**
+     * Method to populate all fields with data from selected appointment on the main screen
+     * @param selectedAppointment
+     * @throws SQLException
+     */
     public void setAppointment(Appointment selectedAppointment) throws SQLException {
         this.selectedAppointment = selectedAppointment;
         modifyApptIdField.setText(Integer.toString(selectedAppointment.getApptId()));
@@ -297,7 +312,10 @@ public class modifyAppointmentController {
 
     }
 
-
+    /**
+     * Initialize method to populate combo boxes with selections from database tables
+     * @throws SQLException
+     */
     @FXML
     public void initialize() throws SQLException {
         ObservableList<Contacts> contactsList = ContactsDb.getAllContacts();
