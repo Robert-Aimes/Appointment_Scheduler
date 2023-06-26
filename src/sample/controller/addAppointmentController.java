@@ -11,9 +11,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import sample.DAO.AppointmentDb;
 import sample.DAO.ContactsDb;
 import sample.DAO.CustomerDb;
 import sample.DAO.UsersDb;
+import sample.model.Appointment;
 import sample.model.Contacts;
 import sample.model.Customer;
 import sample.model.Users;
@@ -22,7 +24,9 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class addAppointmentController {
@@ -60,9 +64,84 @@ public class addAppointmentController {
      * @param actionEvent
      * @throws IOException
      */
+    public void saveButtonClicked(ActionEvent actionEvent) {
+        try{
+            LocalTime apptStartTime = addApptStartTimeChoice.getValue();
+            LocalTime apptEndTime = addApptEndTimeChoice.getValue();
 
-    public void saveButtonClicked(Action actionEvent) throws IOException{
+            // Get the selected start and end dates from the date pickers
+            LocalDate startDate = addApptStartDatePicker.getValue();
+            LocalDate endDate = addApptEndDatePicker.getValue();
 
+            // Combine the selected date and time into LocalDateTime objects
+            LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
+            LocalDateTime endDateTime = LocalDateTime.of(endDate, apptEndTime);
+
+            // Convert the LocalDateTime objects to UTC by applying the user's time zone offset
+            ZoneId userTimeZone = ZoneId.systemDefault();
+            ZoneOffset userOffset = userTimeZone.getRules().getOffset(startDateTime);
+            Instant startInstant = startDateTime.toInstant(userOffset);
+            Instant endInstant = endDateTime.toInstant(userOffset);
+
+            // Convert the UTC Instant values back to LocalDateTime objects
+            LocalDateTime utcStartDateTime = LocalDateTime.ofInstant(startInstant, ZoneOffset.UTC);
+            LocalDateTime utcEndDateTime = LocalDateTime.ofInstant(endInstant, ZoneOffset.UTC);
+
+            // Check if the appointment falls within business hours (8:00 a.m. to 10:00 p.m. EST)
+            ZoneId estTimeZone = ZoneId.of("America/New_York");
+            LocalDateTime estStartDateTime = utcStartDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(estTimeZone).toLocalDateTime();
+            LocalDateTime estEndDateTime = utcEndDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(estTimeZone).toLocalDateTime();
+            LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
+            LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
+
+            if (estStartDateTime.toLocalTime().isBefore(estBusinessHoursStart) || estEndDateTime.toLocalTime().isAfter(estBusinessHoursEnd)) {
+                // Display an error message for scheduling outside business hours
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
+
+            //Not sure if this is working
+            // Check for overlapping appointments
+            List<Appointment> existingAppointments = AppointmentDb.getAllAppointments();
+            for (Appointment appointment : existingAppointments) {
+                LocalDateTime existingStartDateTime = appointment.getApptStartTime();
+                LocalDateTime existingEndDateTime = appointment.getApptEndTime();
+
+                if ((utcStartDateTime.isAfter(existingStartDateTime) && utcStartDateTime.isBefore(existingEndDateTime)) ||
+                        (utcEndDateTime.isAfter(existingStartDateTime) && utcEndDateTime.isBefore(existingEndDateTime)) ||
+                        (utcStartDateTime.isEqual(existingStartDateTime) || utcEndDateTime.isEqual(existingEndDateTime))) {
+                    // Display an error message for overlapping appointments
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+            int apptId = getNewID();
+            String apptType = addApptTypeField.getText();
+            String apptDescription = addApptDescriptionField.getText();
+            String apptLocation = addApptLocationField.getText();
+            String apptTitle = addApptTitleField.getText();
+            int customerId = addApptCustomerIdChoice.getValue();
+            int userId = addApptUserIdChoice.getValue();
+            String contact = addApptContactChoice.getValue();
+
+            LocalDateTime currentDateTime = LocalDateTime.now();
+
+            // Format the current date and time as a string
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String createdDateTime = currentDateTime.format(formatter);
+
+            //Get Contact ID from contact name
+
+            //Get UserID
+
+            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime, utcEndDateTime, createdDateTime, contact, createdDateTime, contact, customerId, userId, int contactId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -110,6 +189,14 @@ public class addAppointmentController {
 
     }
 
+    public static int getNewID() throws SQLException {
+        int apptID = 1;
+        for(int i = 0; i < AppointmentDb.getAllAppointments().size(); i++){
+            apptID++;
+        }
+        return apptID;
+    }
+
     /**
      * initialize method to populate the different combo boxes from database table queries
      * @throws SQLException
@@ -143,4 +230,6 @@ public class addAppointmentController {
         populateTimeChoices();
 
     }
+
+
 }
