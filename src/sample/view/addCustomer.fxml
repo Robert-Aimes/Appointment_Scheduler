@@ -53,7 +53,7 @@
       <ChoiceBox fx:id="addCustStateField" layoutX="175.0" layoutY="376.0" prefWidth="150.0" />
       <ChoiceBox fx:id="addCustCountryField" layoutX="172.0" layoutY="280.0" prefWidth="150.0" onAction = "#setStateDropDown"/>
       <TextField fx:id="addCustPostalField" layoutX="173.0" layoutY="326.0" />
-      <Button fx:id="addCustSaveButton" layoutX="146.0" layoutY="429.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Save" />
+      <Button fx:id="addCustSaveButton" layoutX="146.0" layoutY="429.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" onAction= "#saveCustomerButtonClicked" text="Save" />
       <Button fx:id="addCustCancelButton" layoutX="269.0" layoutY="429.0" mnemonicParsing="false" onAction="#cancelButtonClicked" text="Cancel" />
    </children>
 </AnchorPane>

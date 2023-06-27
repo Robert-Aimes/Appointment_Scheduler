@@ -1,5 +1,6 @@
 package sample.controller;
 
+import com.mysql.cj.xdevapi.Warning;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import sample.model.Contacts;
 import sample.model.Countries;
 import sample.model.firstLevelDivisions;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -60,6 +62,27 @@ public class addCustomerController {
         }
     }
 
+    public void saveCustomerButtonClicked(ActionEvent actionEvent) throws IOException{
+        try{
+            int customerId = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
+            String customerName = addCustNameField.getText();
+            String customerPhone = addCustPhoneField.getText();
+            String customerAddress = addCustAddressField.getText();
+            String customerCountry = (String) addCustCountryField.getValue();
+            String customerState = (String) addCustStateField.getValue();
+
+            checkAddressFormat(customerCountry, customerAddress);
+
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method populates the State/Province combobox drop down based on User's country selection
+     * @param actionEvent
+     */
     public void setStateDropDown(ActionEvent actionEvent){
         try{
             String countrySelection = (String) addCustCountryField.getValue();
@@ -80,7 +103,7 @@ public class addCustomerController {
                 }
             });
 
-            //needs a little revision
+
             if (countrySelection.equals("U.S")) {
                 addCustStateField.setItems(usDivisions);
             }
@@ -97,6 +120,31 @@ public class addCustomerController {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void checkAddressFormat(String customerCountry, String countryAddressField){
+        String countryName = (String) addCustCountryField.getValue();
+        String customerAddress = addCustAddressField.getText();
+        String usCaPattern = "\\d+ [A-Za-z\\s]+, [A-Za-z\\s]+";
+        String ukPattern = "\\d+ [A-Za-z\\s]+, [A-Za-z\\s]+, [A-Za-z\\s]+";
+
+        if(countryName.equals("US")){
+            if(!customerAddress.matches(usCaPattern)){
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Address field must match the format of: 123 ABC Street, White Plains", ButtonType.OK);
+                alert.showAndWait();
+            }
+        } else if(countryName.equals("Canada")){
+            if(!customerAddress.matches(usCaPattern)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Address field must match the format of: 123 ABC Street, Newmarket", ButtonType.OK);
+                alert.showAndWait();
+            }
+        } else if(countryName.equals("UK")){
+            if(!customerAddress.matches(ukPattern)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Address field must match the format of: 123 ABC Street, Greenwich, London", ButtonType.OK);
+                alert.showAndWait();
+            }
+        }
+
     }
 
     @FXML
