@@ -14,15 +14,23 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import sample.DAO.ContactsDb;
 import sample.DAO.CountriesDb;
+import sample.DAO.JDBC;
 import sample.DAO.firstLevelDivisionsDb;
 import sample.model.Contacts;
 import sample.model.Countries;
+import sample.model.SharedData;
 import sample.model.firstLevelDivisions;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class addCustomerController {
@@ -62,21 +70,80 @@ public class addCustomerController {
         }
     }
 
+    /**
+     * Method to handle functionality when user presses the save button. Will gather all inputted data and create new customer if no errors are thrown.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void saveCustomerButtonClicked(ActionEvent actionEvent) throws IOException{
         try{
+
+            LocalDateTime currentDateTime = LocalDateTime.now();
+
+
+
             int customerId = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
             String customerName = addCustNameField.getText();
             String customerPhone = addCustPhoneField.getText();
             String customerAddress = addCustAddressField.getText();
             String customerCountry = (String) addCustCountryField.getValue();
             String customerState = (String) addCustStateField.getValue();
+            String customerPostal = addCustPostalField.getText();
+            String createdBy = SharedData.getEnteredUsername();
+            String lastUpdatedBy = createdBy;
+            int divisionId = getDivisionIdByName(customerState);
 
             checkAddressFormat(customerCountry, customerAddress);
+
+            String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
+
+            Connection connection = JDBC.openConnection();
+            PreparedStatement ps = connection.prepareStatement(insertStatement);
+            ps.setInt(1, customerId);
+            ps.setString(2, customerName);
+            ps.setString(3, customerAddress);
+            ps.setString(4, customerPostal);
+            ps.setString(5,customerPhone);
+            ps.setTimestamp(6, Timestamp.valueOf(currentDateTime));
+            ps.setString(7, createdBy);
+            ps.setTimestamp(8, Timestamp.valueOf(currentDateTime));
+            ps.setString(9, createdBy);
+            ps.setInt(10, divisionId);
+
+
+            //System.out.println("ps " + ps);
+            ps.execute();
+
+            Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
+            Scene mainScreenScene = new Scene(mainScreenWindow);
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            window.setScene(mainScreenScene);
+            window.show();
 
 
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Method to retrieve Division ID given a division as a parameter
+     * @param customerState
+     * @return
+     * @throws SQLException
+     */
+    private int getDivisionIdByName(String customerState) throws SQLException{
+        int divisionID = -1;
+        ObservableList<firstLevelDivisions> divisionsList = firstLevelDivisionsDb.getAllDivisions();
+        for(firstLevelDivisions division : divisionsList) {
+            if (division.getDivisionName().equals(customerState)) {
+                divisionID = division.getDivisionId();
+                break;
+            }
+        }
+        return divisionID;
+
     }
 
     /**
@@ -122,6 +189,11 @@ public class addCustomerController {
         }
     }
 
+    /**
+     * Method I created to check the format of the User entered Address text field to see if it is valid for each country.
+     * @param customerCountry
+     * @param countryAddressField
+     */
     public void checkAddressFormat(String customerCountry, String countryAddressField){
         String countryName = (String) addCustCountryField.getValue();
         String customerAddress = addCustAddressField.getText();

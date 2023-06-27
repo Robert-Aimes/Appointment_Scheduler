@@ -136,6 +136,7 @@ public class modifyAppointmentController {
                 }
             }
 
+            //Need to work on some logic here to keep the created by and data values from original record
             int apptId = Integer.parseInt(modifyApptIdField.getText());
             String apptType = modifyApptTypeField.getText();
             String apptDescription = modifyApptDescriptionField.getText();
@@ -145,7 +146,7 @@ public class modifyAppointmentController {
             int userId = modifyApptUserIdChoice.getValue();
             String contactName = modifyApptContactChoice.getValue();
             String createdBy = SharedData.getEnteredUsername();
-            String lastUpdatedBy = createdBy;
+            String lastUpdatedBy = SharedData.getEnteredUsername();
 
             int contactId = getContactIdByName(contactName);
 
