@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import sample.model.Customer;
 
 public class modifyCustomerController {
     @FXML
@@ -24,4 +25,17 @@ public class modifyCustomerController {
     private Button modifyCustSaveButton;
     @FXML
     private Button modifyCustCancelButton;
+    private Customer selectedCustomer;
+
+    public void setCustomer(Customer selectedCustomer) {
+        this.selectedCustomer = selectedCustomer;
+        modifyCustIdField.setText(Integer.toString(selectedCustomer.getCustId()));
+        modifyCustNameField.setText(selectedCustomer.getCustName());
+        modifyCustPhoneField.setText(selectedCustomer.getCustPhone());
+        modifyCustAddressField.setText(selectedCustomer.getCustAddress());
+        modifyCustStateField.setValue(selectedCustomer.getCustDivisionName());
+        modifyCustPostalField.setText(selectedCustomer.getCustPostalCode());
+        //modifyCustCountryField.setValue(selectedCustomer.get)
+
+    }
 }

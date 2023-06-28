@@ -186,11 +186,27 @@ public class mainScreenController implements Initializable{
      * @throws IOException
      */
     public void modifyCustButtonClicked(ActionEvent actionEvent) throws IOException{
-        Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/modifyCustomer.fxml"));
-        Scene mainScreenScene = new Scene(mainScreenWindow);
-        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-        window.setScene(mainScreenScene);
-        window.show();
+        try {
+            Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+            if (selectedCustomer == null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select a Customer to update.", ButtonType.OK);
+                alert.showAndWait();
+            } else {
+
+                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/modifyCustomer.fxml"));
+                Parent scene = loader.load();
+                modifyCustomerController controller = loader.getController();
+                controller.setCustomer(selectedCustomer);
+                stage.setTitle("Update Customer");
+                stage.setScene(new Scene(scene));
+                stage.show();
+
+            }
+
+        } finally {
+
+        }
     }
 
     /**
@@ -286,7 +302,8 @@ public class mainScreenController implements Initializable{
     }
 
     /**
-     * Method created to check whether or not a customer has a related appointment in the appointment table
+     * Lambda function created to check if a customer has a related appointment in the appointment table
+     * we use the stream() method to convert the appointmentList into a stream. Then, we use the anyMatch method along with a lambda expression to check if there is any appointment with a matching customerId.
      * @param customerID
      * @return
      * @throws SQLException
@@ -294,17 +311,18 @@ public class mainScreenController implements Initializable{
     public boolean checkCustomerAppointments(int customerID) throws SQLException {
         ObservableList<Appointment> appointmentList = AppointmentDb.getAllAppointments();
 
-        for (Appointment appointment : appointmentList) {
-            if (appointment.getCustomerId() == customerID) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "You must remove all appointments related to this customer before deleting the customer.");
-                alert.showAndWait();
-                return false;
-            }
+        boolean hasRelatedAppointments = appointmentList.stream()
+                .anyMatch(appointment -> appointment.getCustomerId() == customerID);
+
+        if (hasRelatedAppointments) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must remove all appointments related to this customer before deleting the customer.");
+            alert.showAndWait();
+            return false;
         }
 
         return true;
-
     }
+
 
 
     @Override
