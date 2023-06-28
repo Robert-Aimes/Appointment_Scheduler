@@ -240,14 +240,23 @@ public class mainScreenController implements Initializable{
             alert.showAndWait();
             if (alert.getResult() == ButtonType.YES) {
                 int selectedAppointmentId = selectedAppointment.getApptId();
+                String apptType = selectedAppointment.getApptType();
                 AppointmentDb.deleteAppointment(selectedAppointmentId);
                 ObservableList<Appointment> allAppointments = AppointmentDb.getAllAppointments();
                 appointmentTable.setItems(allAppointments);
+                Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment successfully deleted: Appointment ID = " + selectedAppointmentId + " Appointment Type: " + apptType, ButtonType.OK);
+                confirmationAlert.showAndWait();
 
             }
         }
     }
 
+    /**
+     * This method handles the functionality when the delete customer button is clicked. It also calls a different method that checks whether a customer has an appointment as well throwing an error if they do.
+     * @param actionEvent
+     * @throws IOException
+     * @throws SQLException
+     */
     public void deleteCustomerButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
         Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
 
@@ -276,6 +285,12 @@ public class mainScreenController implements Initializable{
         }
     }
 
+    /**
+     * Method created to check whether or not a customer has a related appointment in the appointment table
+     * @param customerID
+     * @return
+     * @throws SQLException
+     */
     public boolean checkCustomerAppointments(int customerID) throws SQLException {
         ObservableList<Appointment> appointmentList = AppointmentDb.getAllAppointments();
 
