@@ -60,6 +60,7 @@ public class CustomerDb {
     }
 
     public void deleteCustomer(int custId) throws SQLException{
+        Connection connection = JDBC.openConnection();
         String query = "DELETE FROM customers WHERE Customer_ID=?";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1, custId);

@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.DAO.AppointmentDb;
+import sample.DAO.ContactsDb;
 import sample.DAO.CustomerDb;
 import sample.DAO.JDBC;
 import sample.main.Main;
@@ -27,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.Initializable;
 import sample.model.Appointment;
+import sample.model.Contacts;
 import sample.model.Customer;
 
 
@@ -241,6 +243,32 @@ public class mainScreenController implements Initializable{
                 AppointmentDb.deleteAppointment(selectedAppointmentId);
                 ObservableList<Appointment> allAppointments = AppointmentDb.getAllAppointments();
                 appointmentTable.setItems(allAppointments);
+
+            }
+        }
+    }
+
+    public void deleteCustomerButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
+        Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+        if (selectedCustomer == null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select a Customer from the Customer table.", ButtonType.OK);
+            alert.showAndWait();
+        } else {
+            int customerID = selectedCustomer.getCustId();
+            ObservableList<Appointment> appointmentList = AppointmentDb.getAllAppointments();
+            for(Appointment appointment : appointmentList) {
+                if (appointment.getCustomerId() == customerID) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "You must remove all Appointments related to this Customer before deleting the Customer?", ButtonType.OK);
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to delete this Customer?", ButtonType.YES, ButtonType.NO);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
+                int selectedCustomerId = selectedCustomer.getCustId();
+                CustomerDb customerDb = new CustomerDb();
+                customerDb.deleteCustomer(selectedCustomerId);
+                ObservableList<Customer> allCustomers = CustomerDb.getAllCustomers();
+                customerTable.setItems(allCustomers);
 
             }
         }
