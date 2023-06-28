@@ -145,8 +145,9 @@ public class modifyAppointmentController {
             int customerId = modifyApptCustomerIdChoice.getValue();
             int userId = modifyApptUserIdChoice.getValue();
             String contactName = modifyApptContactChoice.getValue();
-            String createdBy = SharedData.getEnteredUsername();
             String lastUpdatedBy = SharedData.getEnteredUsername();
+            LocalDateTime createdDate = selectedAppointment.getApptCreateDate();
+            String createdBy = selectedAppointment.getApptCreatedBy();
 
             int contactId = getContactIdByName(contactName);
 
@@ -173,7 +174,7 @@ public class modifyAppointmentController {
             ps.setTimestamp(6, Timestamp.valueOf(utcStartDateTime));
             ps.setTimestamp(7, Timestamp.valueOf(utcEndDateTime));
             //need to verify this is correct
-            ps.setTimestamp(8, Timestamp.valueOf(currentDateTime));
+            ps.setTimestamp(8, Timestamp.valueOf(createdDate));
             ps.setString(9, createdBy);
             ps.setTimestamp(10, Timestamp.valueOf(currentDateTime));
             ps.setString(11, lastUpdatedBy);
@@ -282,6 +283,8 @@ public class modifyAppointmentController {
         modifyApptContactChoice.getSelectionModel().select(contactName);
         modifyApptUserIdChoice.setValue(selectedAppointment.getUserId());
         modifyApptCustomerIdChoice.setValue(selectedAppointment.getCustomerId());
+        LocalDateTime createdDate = selectedAppointment.getApptCreateDate();
+        String createdBy = selectedAppointment.getApptCreatedBy();
 
     }
 
