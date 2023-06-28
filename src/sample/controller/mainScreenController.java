@@ -250,28 +250,45 @@ public class mainScreenController implements Initializable{
 
     public void deleteCustomerButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
         Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+
         if (selectedCustomer == null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select a Customer from the Customer table.", ButtonType.OK);
             alert.showAndWait();
         } else {
             int customerID = selectedCustomer.getCustId();
-            ObservableList<Appointment> appointmentList = AppointmentDb.getAllAppointments();
-            for(Appointment appointment : appointmentList) {
-                if (appointment.getCustomerId() == customerID) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "You must remove all Appointments related to this Customer before deleting the Customer?", ButtonType.OK);
-                }
-            }
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to delete this Customer?", ButtonType.YES, ButtonType.NO);
-            alert.showAndWait();
-            if (alert.getResult() == ButtonType.YES) {
-                int selectedCustomerId = selectedCustomer.getCustId();
-                CustomerDb customerDb = new CustomerDb();
-                customerDb.deleteCustomer(selectedCustomerId);
-                ObservableList<Customer> allCustomers = CustomerDb.getAllCustomers();
-                customerTable.setItems(allCustomers);
+            boolean hasAppointments = checkCustomerAppointments(customerID);
 
+            if (hasAppointments) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to delete this Customer?", ButtonType.YES, ButtonType.NO);
+                alert.showAndWait();
+
+                if (alert.getResult() == ButtonType.YES) {
+                    int selectedCustomerId = selectedCustomer.getCustId();
+                    CustomerDb customerDb = new CustomerDb();
+                    customerDb.deleteCustomer(selectedCustomerId);
+                    ObservableList<Customer> allCustomers = CustomerDb.getAllCustomers();
+                    customerTable.setItems(allCustomers);
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "You cannot delete this customer because they have related appointments.");
+                alert.showAndWait();
             }
         }
+    }
+
+    public boolean checkCustomerAppointments(int customerID) throws SQLException {
+        ObservableList<Appointment> appointmentList = AppointmentDb.getAllAppointments();
+
+        for (Appointment appointment : appointmentList) {
+            if (appointment.getCustomerId() == customerID) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "You must remove all appointments related to this customer before deleting the customer.");
+                alert.showAndWait();
+                return false;
+            }
+        }
+
+        return true;
+
     }
 
 
