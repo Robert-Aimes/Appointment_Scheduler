@@ -323,7 +323,37 @@ public class mainScreenController implements Initializable{
         return true;
     }
 
+    /**
+     * Created method to check if there is an appointment within 15 minutes of the users log in time
+     * @param logInTime
+     * @throws SQLException
+     */
+    public void checkAppointmentTimes(LocalDateTime logInTime) throws SQLException {
+        ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
 
+        boolean foundAppointment = false;
+        for(Appointment appt : apptList){
+            LocalDateTime apptStartTime = appt.getApptStartTime();
+
+            // Calculate the time difference between the current time and the appointment's start time
+            Duration timeDifference = Duration.between(logInTime, apptStartTime);
+            long minutesDifference = timeDifference.toMinutes();
+
+            // Check if the appointment's start time is within 15 minutes of the current time
+            if (minutesDifference >= -15 && minutesDifference <= 15) {
+                // Display an alert
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: " + appt.getApptId() + " Start Date and Time: " + appt.getApptStartTime(), ButtonType.OK);
+                alert.showAndWait();
+                break; // Exit the loop after displaying the alert for the first appointment found
+            }
+
+        }
+        if (!foundAppointment) {
+            // Display an alert indicating no appointments within 15 minutes
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "There are no appointments within 15 minutes.", ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -362,40 +392,12 @@ public class mainScreenController implements Initializable{
         customerLastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("custLastUpdate"));
         customerLastUpdatedByColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdatedBy"));
 
-        try{
-            ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
-            LocalDateTime currentTime = LocalDateTime.now();
-            boolean foundAppointment = false;
-            for(Appointment appt : apptList){
-                LocalDateTime apptStartTime = appt.getApptStartTime();
-
-                // Calculate the time difference between the current time and the appointment's start time
-                Duration timeDifference = Duration.between(currentTime, apptStartTime);
-                long minutesDifference = timeDifference.toMinutes();
-
-                // Check if the appointment's start time is within 15 minutes of the current time
-                if (minutesDifference >= -15 && minutesDifference <= 15) {
-                    // Display an alert
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: " + appt.getApptId() + " Start Date and Time: " + appt.getApptStartTime(), ButtonType.OK);
-                    alert.showAndWait();
-                    break; // Exit the loop after displaying the alert for the first appointment found
-                }
-
-            }
-            if (!foundAppointment) {
-                // Display an alert indicating no appointments within 15 minutes
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "There are no appointments within 15 minutes.", ButtonType.OK);
-                alert.showAndWait();
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
 
         appointmentAllRadio.setSelected(true);
 
 
     }
+
 
 
 }

@@ -29,6 +29,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ResourceBundle;
 import java.util.Locale;
@@ -54,7 +55,7 @@ public class loginFormController implements Initializable{
      *
      * @throws IOException
      */
-    public void loginButtonClicked(javafx.event.ActionEvent actionEvent) throws IOException {
+    public void loginButtonClicked(javafx.event.ActionEvent actionEvent) throws IOException, SQLException {
         String enteredUsername = username.getText();
         String enteredPassword = password.getText();
 
@@ -77,11 +78,15 @@ public class loginFormController implements Initializable{
         }
         else if(isAuthenticated){
             SharedData.setEnteredUsername(enteredUsername);
-            Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
-            Scene mainScreenScene = new Scene(mainScreenWindow);
-            Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-            window.setScene(mainScreenScene);
-            window.show();
+            LocalDateTime logInTime = LocalDateTime.now();
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/mainScreen.fxml"));
+            Parent scene = loader.load();
+            mainScreenController controller = loader.getController();
+            controller.checkAppointmentTimes(logInTime);
+            stage.setTitle("Main Screen");
+            stage.setScene(new Scene(scene));
+            stage.show();
         }
     }
 
