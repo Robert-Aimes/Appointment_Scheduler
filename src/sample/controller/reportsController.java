@@ -1,8 +1,8 @@
 package sample.controller;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,17 +19,12 @@ import sample.DAO.AppointmentDb;
 import sample.DAO.ContactsDb;
 import sample.DAO.JDBC;
 import sample.model.Appointment;
+import sample.model.AppointmentSummary;
 import sample.model.Contacts;
 
+import javax.security.auth.callback.Callback;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
+import java.sql.*;
 
 public class reportsController {
     public TableColumn schedApptIdField;
@@ -41,9 +36,9 @@ public class reportsController {
     public TableColumn schedEndDateField;
     public TableColumn schedEndTimeField;
     public TableColumn schedCustIdField;
-    public TableColumn apptMonthField;
-    public TableColumn apptTypeField;
-    public TableColumn totalApptField;
+    public TableColumn<AppointmentSummary, String> apptMonthField;
+    public TableColumn<AppointmentSummary, String> apptTypeField;
+    public TableColumn<AppointmentSummary, Integer> totalApptField;
     public TableColumn custStateField;
     public TableColumn totalCustField;
     public ChoiceBox contactChoice;
@@ -81,12 +76,34 @@ public class reportsController {
 
     }
 
-    public void populateSummarizedTable(ActionEvent event) throws SQLException {
-        ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
+    /**
+     * This method queries the appointment table to get a summarized view of appointments by month and type and total to populate the report tableview
+     * @return
+     */
+    public ObservableList<AppointmentSummary> getAppointmentSummaries() {
+        ObservableList<AppointmentSummary> appointmentSummaries = FXCollections.observableArrayList();
 
+        try (Connection connection = JDBC.openConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT DATE_FORMAT(Start, '%Y-%m') AS Month, Type, COUNT(*) AS TotalAppointments\n" +
+                     "FROM Appointments\n" +
+                     "WHERE Customer_ID IS NOT NULL\n" +
+                     "GROUP BY Month, Type\n" +
+                     "ORDER BY Month, Type")) {
 
+            while (resultSet.next()) {
+                String month = resultSet.getString("Month");
+                String type = resultSet.getString("Type");
+                int totalAppointments = resultSet.getInt("TotalAppointments");
 
+                AppointmentSummary summary = new AppointmentSummary(month, type, totalAppointments);
+                appointmentSummaries.add(summary);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        return appointmentSummaries;
     }
 
     /**
@@ -144,6 +161,14 @@ public class reportsController {
 
         ObservableList<Contacts> contactsList = ContactsDb.getAllContacts();
         ObservableList<String> contactNamesList = FXCollections.observableArrayList();
+
+        apptMonthField.setCellValueFactory(new PropertyValueFactory<>("month"));
+        apptTypeField.setCellValueFactory(new PropertyValueFactory<>("type"));
+        totalApptField.setCellValueFactory(new PropertyValueFactory<>("total"));
+
+        // Retrieve data and populate table
+        ObservableList<AppointmentSummary> appointmentSummaries = getAppointmentSummaries();
+        summarizedAppointmentTable.setItems(appointmentSummaries);
 
         for(Contacts contact : contactsList){
             String contactName = contact.getContactName();
