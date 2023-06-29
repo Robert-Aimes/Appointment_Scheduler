@@ -17,10 +17,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.DAO.AppointmentDb;
 import sample.DAO.ContactsDb;
+import sample.DAO.JDBC;
 import sample.model.Appointment;
 import sample.model.Contacts;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,7 +81,11 @@ public class reportsController {
 
     }
 
-    public void populateSummarizedTable(ActionEvent event){
+    public void populateSummarizedTable(ActionEvent event) throws SQLException {
+        ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
+
+
+
 
     }
 
