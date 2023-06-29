@@ -295,6 +295,9 @@ public class mainScreenController implements Initializable{
                     customerDb.deleteCustomer(selectedCustomerId);
                     ObservableList<Customer> allCustomers = CustomerDb.getAllCustomers();
                     customerTable.setItems(allCustomers);
+
+                    Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION, "Customer: " + selectedCustomerId + " successfully deleted.", ButtonType.OK);
+                    confirmationAlert.showAndWait();
                 }
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "You cannot delete this customer because they have related appointments.");
