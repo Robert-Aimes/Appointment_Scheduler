@@ -21,6 +21,9 @@ import sample.model.Countries;
 import sample.model.SharedData;
 import sample.model.firstLevelDivisions;
 
+import java.util.Random;
+import java.util.UUID;
+
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
@@ -82,7 +85,7 @@ public class addCustomerController {
 
 
 
-            int customerId = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
+            int customerId = generateRandomCustomerId();
             String customerName = addCustNameField.getText();
             String customerPhone = addCustPhoneField.getText();
             String customerAddress = addCustAddressField.getText();
@@ -93,7 +96,21 @@ public class addCustomerController {
             String lastUpdatedBy = createdBy;
             int divisionId = getDivisionIdByName(customerState);
 
-            checkAddressFormat(customerCountry, customerAddress);
+
+
+
+            // Validate address format
+            boolean isAddressFormatValid = checkAddressFormat(customerCountry, customerAddress);
+            if (!isAddressFormatValid) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, getInvalidAddressFormatMessage(customerCountry), ButtonType.OK);
+                alert.showAndWait();
+                return; // Exit the method if address format is invalid
+            }
+
+            // Validate input fields
+            if (!validateInputFields(customerName, customerPhone, customerAddress, customerCountry, customerState, customerPostal)) {
+                return; // Exit the method if any field is invalid
+            }
 
             String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
@@ -122,7 +139,8 @@ public class addCustomerController {
 
 
         } catch (Exception e){
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Error adding Customer. Please check all fields for correct input.", ButtonType.OK);
+            alert.showAndWait();
         }
     }
 
@@ -144,6 +162,16 @@ public class addCustomerController {
         }
         return divisionID;
 
+    }
+
+    private boolean validateInputFields(String customerName, String customerPhone, String customerAddress, String customerCountry, String customerState, String customerPostal) {
+        if (customerName.isEmpty() || customerPhone.isEmpty() || customerAddress.isEmpty() ||
+                customerCountry == null || customerState == null || customerPostal.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please fill in all the required fields.", ButtonType.OK);
+            alert.showAndWait();
+            return false; // Return false if any field is blank
+        }
+        return true; // All fields are valid
     }
 
     /**
@@ -192,31 +220,37 @@ public class addCustomerController {
     /**
      * Method I created to check the format of the User entered Address text field to see if it is valid for each country.
      * @param customerCountry
-     * @param countryAddressField
+     * @param customerAddress
      */
-    public void checkAddressFormat(String customerCountry, String countryAddressField){
-        String countryName = (String) addCustCountryField.getValue();
-        String customerAddress = addCustAddressField.getText();
-        String usCaPattern = "\\d+ [A-Za-z\\s]+, [A-Za-z\\s]+";
+    public boolean checkAddressFormat(String customerCountry, String customerAddress) {
+        String usPattern = "\\d+ [A-Za-z\\s]+, [A-Za-z\\s]+";
+        String canadaPattern = "\\d+ [A-Za-z\\s]+, [A-Za-z\\s]+";
         String ukPattern = "\\d+ [A-Za-z\\s]+, [A-Za-z\\s]+, [A-Za-z\\s]+";
 
-        if(countryName.equals("US")){
-            if(!customerAddress.matches(usCaPattern)){
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Address field must match the format of: 123 ABC Street, White Plains", ButtonType.OK);
-                alert.showAndWait();
-            }
-        } else if(countryName.equals("Canada")){
-            if(!customerAddress.matches(usCaPattern)) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Address field must match the format of: 123 ABC Street, Newmarket", ButtonType.OK);
-                alert.showAndWait();
-            }
-        } else if(countryName.equals("UK")){
-            if(!customerAddress.matches(ukPattern)) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Address field must match the format of: 123 ABC Street, Greenwich, London", ButtonType.OK);
-                alert.showAndWait();
-            }
+        if (customerCountry.equals("U.S")) {
+            return customerAddress.matches(usPattern);
+        } else if (customerCountry.equals("Canada")) {
+            return customerAddress.matches(canadaPattern);
+        } else if (customerCountry.equals("UK")) {
+            return customerAddress.matches(ukPattern);
         }
 
+        return false;
+    }
+
+    private String getInvalidAddressFormatMessage(String customerCountry) {
+        if (customerCountry.equals("U.S")) {
+            return "Address field must match the format of: 123 ABC Street, White Plains";
+        } else if (customerCountry.equals("Canada")) {
+            return "Address field must match the format of: 123 ABC Street, Newmarket";
+        } else if (customerCountry.equals("UK")) {
+            return "Address field must match the format of: 123 ABC Street, Greenwich, London";
+        }return "Address does not match required format for Country.";
+    }
+
+    private int generateRandomCustomerId() {
+        Random random = new Random();
+        return random.nextInt(10000); // Generate a random integer within the desired range
     }
 
     @FXML
