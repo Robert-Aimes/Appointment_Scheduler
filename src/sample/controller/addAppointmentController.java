@@ -84,17 +84,6 @@ public class addAppointmentController {
                 }
             }
 
-            // Check if the appointment falls on a weekend (Saturday or Sunday)
-            DayOfWeek startDayOfWeek = startDate.getDayOfWeek();
-            DayOfWeek endDayOfWeek = endDate.getDayOfWeek();
-            if (startDayOfWeek == DayOfWeek.SATURDAY || startDayOfWeek == DayOfWeek.SUNDAY ||
-                    endDayOfWeek == DayOfWeek.SATURDAY || endDayOfWeek == DayOfWeek.SUNDAY) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on a weekend.", ButtonType.OK);
-                alert.showAndWait();
-                return;
-            }
-
-
 
             // Combine the selected date and time into LocalDateTime objects
             LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
