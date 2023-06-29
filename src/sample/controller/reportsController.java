@@ -48,7 +48,10 @@ public class reportsController {
     public TableView summarizedAppointmentTable;
     public TableView customerByStateTable;
 
-
+    /**
+     * Method that changes filters the employee schedule table based on the contact selected in the combo box
+     * @throws SQLException
+     */
     public void contactChoice() throws SQLException {
         String chosenContact = (String) contactChoice.getValue();
         int contactID = getContactIdByName(chosenContact);
@@ -71,6 +74,10 @@ public class reportsController {
         SchedStartTimeField.setCellValueFactory(new PropertyValueFactory<>("apptStartTime"));
         schedEndTimeField.setCellValueFactory(new PropertyValueFactory<>("apptEndTime"));
         schedCustIdField.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+
+    }
+
+    public void populateSummarizedTable(ActionEvent event){
 
     }
 
