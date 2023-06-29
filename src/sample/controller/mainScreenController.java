@@ -15,10 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import sample.DAO.AppointmentDb;
-import sample.DAO.ContactsDb;
-import sample.DAO.CustomerDb;
-import sample.DAO.JDBC;
+import sample.DAO.*;
 import sample.main.Main;
 
 import java.sql.Connection;
@@ -29,6 +26,7 @@ import java.sql.SQLException;
 import javafx.fxml.Initializable;
 import sample.model.Appointment;
 import sample.model.Contacts;
+import sample.model.Countries;
 import sample.model.Customer;
 
 
@@ -37,10 +35,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.ResourceBundle;
@@ -367,7 +362,35 @@ public class mainScreenController implements Initializable{
         customerLastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("custLastUpdate"));
         customerLastUpdatedByColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdatedBy"));
 
+        try{
+            ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
+            LocalDateTime currentTime = LocalDateTime.now();
+            boolean foundAppointment = false;
+            for(Appointment appt : apptList){
+                LocalDateTime apptStartTime = appt.getApptStartTime();
 
+                // Calculate the time difference between the current time and the appointment's start time
+                Duration timeDifference = Duration.between(currentTime, apptStartTime);
+                long minutesDifference = timeDifference.toMinutes();
+
+                // Check if the appointment's start time is within 15 minutes of the current time
+                if (minutesDifference >= -15 && minutesDifference <= 15) {
+                    // Display an alert
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: " + appt.getApptId() + " Start Date and Time: " + appt.getApptStartTime(), ButtonType.OK);
+                    alert.showAndWait();
+                    break; // Exit the loop after displaying the alert for the first appointment found
+                }
+
+            }
+            if (!foundAppointment) {
+                // Display an alert indicating no appointments within 15 minutes
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "There are no appointments within 15 minutes.", ButtonType.OK);
+                alert.showAndWait();
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         appointmentAllRadio.setSelected(true);
 

@@ -290,9 +290,6 @@ public class modifyCustomerController {
         }
     }
 
-
-
-
     @FXML
     public void initialize() throws SQLException{
         ObservableList<Countries> countryList = CountriesDb.getAllCountries();
