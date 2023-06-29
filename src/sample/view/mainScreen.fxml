@@ -18,7 +18,6 @@
             <TableColumn fx:id="appointmentContactColumn" prefWidth="99.0" text="Contact" />
             <TableColumn fx:id="appointmentTypeColumn" prefWidth="66.0" text="Type" />
             <TableColumn fx:id="appointmentUserIdColumn" prefWidth="95.0" text="User ID" />
-            <TableColumn prefWidth="75.0" text="Column X" />
         </columns>
       </TableView>
       <RadioButton fx:id="appointmentByWeekRadio" layoutX="447.0" layoutY="75.0" mnemonicParsing="false" onAction="#radioButtonAction" text="Week">
