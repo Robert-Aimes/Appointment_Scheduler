@@ -204,6 +204,8 @@ public class mainScreenController implements Initializable{
 
             }
 
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         } finally {
 
         }

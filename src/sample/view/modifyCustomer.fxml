@@ -52,9 +52,9 @@
         <TextField fx:id="modifyCustPhoneField" layoutX="172.0" layoutY="195.0" />
         <TextField fx:id="modifyCustAddressField" layoutX="172.0" layoutY="237.0" />
         <ChoiceBox fx:id="modifyCustStateField" layoutX="172.0" layoutY="281.0" prefWidth="150.0" />
-        <ChoiceBox fx:id="modifyCustCountryField" layoutX="172.0" layoutY="376.0" prefWidth="150.0" />
+        <ChoiceBox fx:id="modifyCustCountryField" layoutX="172.0" layoutY="376.0" prefWidth="150.0" onAction = "#setStateDropDown" />
         <TextField fx:id="modifyCustPostalField" layoutX="173.0" layoutY="326.0" />
-        <Button fx:id="modifyCustSaveButton" layoutX="146.0" layoutY="429.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Save" />
-        <Button fx:id="modifyCustCancelButton" layoutX="269.0" layoutY="429.0" mnemonicParsing="false" text="Cancel" />
+        <Button fx:id="modifyCustSaveButton" layoutX="146.0" layoutY="429.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" onAction= "#saveCustomerButtonClicked" text="Save" />
+        <Button fx:id="modifyCustCancelButton" layoutX="269.0" layoutY="429.0" mnemonicParsing="false" onAction="#cancelButtonClicked" text="Cancel" />
     </children>
 </AnchorPane>
