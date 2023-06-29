@@ -84,7 +84,15 @@ public class modifyAppointmentController {
                 }
             }
 
-            // Rest of your code...
+            // Check if the appointment falls on a weekend (Saturday or Sunday)
+            DayOfWeek startDayOfWeek = startDate.getDayOfWeek();
+            DayOfWeek endDayOfWeek = endDate.getDayOfWeek();
+            if (startDayOfWeek == DayOfWeek.SATURDAY || startDayOfWeek == DayOfWeek.SUNDAY ||
+                    endDayOfWeek == DayOfWeek.SATURDAY || endDayOfWeek == DayOfWeek.SUNDAY) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on a weekend.", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
 
             // Combine the selected date and time into LocalDateTime objects
             LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
@@ -159,6 +167,10 @@ public class modifyAppointmentController {
 
             //Get UserID need to have query getting the ID from the entered username in logincontroller
 
+            if (!validateAppointmentFields(apptStartTime, apptEndTime, startDate, endDate, apptType, apptDescription, apptLocation, apptTitle, customerId, userId, contactName)) {
+                return; // Exit the method if any field is invalid
+            }
+
             Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime, utcEndDateTime, currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
 
             String updateStatement = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
@@ -215,6 +227,12 @@ public class modifyAppointmentController {
         return contactID;
     }
 
+    /**
+     * Method to get contact name given an ID
+     * @param contactID
+     * @return
+     * @throws SQLException
+     */
     private String getContactNameByID(int contactID) throws SQLException{
         String contactName = "";
         ObservableList<Contacts> contactsList = ContactsDb.getAllContacts();
@@ -226,6 +244,35 @@ public class modifyAppointmentController {
         }
         return contactName;
 
+    }
+
+    /**
+     * Method to check if all fxml fields are completed when clicking te save button
+     * @param startTime
+     * @param endTime
+     * @param startDate
+     * @param endDate
+     * @param type
+     * @param description
+     * @param location
+     * @param title
+     * @param customerId
+     * @param userId
+     * @param contactName
+     * @return
+     */
+    private boolean validateAppointmentFields(LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate,
+                                              String type, String description, String location, String title, int customerId, int userId, String contactName) {
+
+        if (startTime == null || endTime == null || startDate == null || endDate == null ||
+                type.isEmpty() || description.isEmpty() || location.isEmpty() || title.isEmpty() ||
+                contactName == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please fill in all the required fields.", ButtonType.OK);
+            alert.showAndWait();
+            return false; // Return false if any field is blank
+        }
+
+        return true; // All fields are valid
     }
 
     /**
