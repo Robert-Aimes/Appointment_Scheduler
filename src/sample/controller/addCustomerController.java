@@ -147,6 +147,7 @@ public class addCustomerController {
 
     /**
      * LAMBDA EXPRESSION to retrieve Division ID given a division as a parameter
+     * In this lambda expression, the divisionsList is converted to a stream using the stream() method. Then, the filter method is used to filter the divisions based on the condition division.getDivisionName().equals(customerState). The findFirst method is used to retrieve the first matching division, and map is used to extract the division ID using firstLevelDivisions::getDivisionId method reference. Finally, orElse is used to provide a default value of -1 if no matching division is found.
      * @param customerState
      * @return
      * @throws SQLException

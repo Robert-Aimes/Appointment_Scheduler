@@ -69,6 +69,7 @@ public class loginFormController implements Initializable{
 
         boolean isAuthenticated = authenticateUser(enteredUsername, enteredPassword);
 
+        //Calls logLoginAttempt method to capture the log in attempt data in the .txt file
         logLoginAttempt(enteredUsername, isAuthenticated);
 
 
