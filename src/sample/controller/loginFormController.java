@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 import sample.DAO.JDBC;
 import sample.main.Main;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -31,9 +34,12 @@ import java.net.URL;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.Locale;
 import java.util.TimeZone;
+
+
 
 
 public class loginFormController implements Initializable{
@@ -49,6 +55,8 @@ public class loginFormController implements Initializable{
     private String alertHeader;
     private String alertText;
 
+    private static final String LOGIN_ACTIVITY_FILE = "login_activity.txt";
+
 
     /**
      * This method handles the functionality when the log in button is clicked. Queries the db for correct username and password
@@ -61,6 +69,7 @@ public class loginFormController implements Initializable{
 
         boolean isAuthenticated = authenticateUser(enteredUsername, enteredPassword);
 
+        logLoginAttempt(enteredUsername, isAuthenticated);
 
 
         if(enteredUsername.equals("") || enteredPassword.equals("")){
@@ -149,6 +158,28 @@ public class loginFormController implements Initializable{
         return false;
     }
 
+    /**
+     * Method that logs all log in attempts in a login activity .txt file
+     * @param username
+     * @param isAuthenticated
+     */
+    private void logLoginAttempt(String username, boolean isAuthenticated) {
+        LocalDateTime timestamp = LocalDateTime.now();
+        String status = isAuthenticated ? "Success" : "Failure";
+        String logEntry = String.format("[%s] %s - %s", timestamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), username, status);
+
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(LOGIN_ACTIVITY_FILE, true)))) {
+            writer.println(logEntry);
+        } catch (IOException e) {
+            System.out.println("Error writing login activity log: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Method that terminates the application
+     * @param actionEvent
+     */
     public void exitButtonClicked(ActionEvent actionEvent) {
         Platform.exit();
     }
