@@ -146,24 +146,30 @@ public class addCustomerController {
 
 
     /**
-     * Method to retrieve Division ID given a division as a parameter
+     * LAMBDA EXPRESSION to retrieve Division ID given a division as a parameter
      * @param customerState
      * @return
      * @throws SQLException
      */
-    private int getDivisionIdByName(String customerState) throws SQLException{
-        int divisionID = -1;
+    private int getDivisionIdByName(String customerState) throws SQLException {
         ObservableList<firstLevelDivisions> divisionsList = firstLevelDivisionsDb.getAllDivisions();
-        for(firstLevelDivisions division : divisionsList) {
-            if (division.getDivisionName().equals(customerState)) {
-                divisionID = division.getDivisionId();
-                break;
-            }
-        }
-        return divisionID;
-
+        return divisionsList.stream()
+                .filter(division -> division.getDivisionName().equals(customerState))
+                .findFirst()
+                .map(firstLevelDivisions::getDivisionId)
+                .orElse(-1);
     }
 
+    /**
+     * Boolean method to check that all fields are not empty
+     * @param customerName
+     * @param customerPhone
+     * @param customerAddress
+     * @param customerCountry
+     * @param customerState
+     * @param customerPostal
+     * @return
+     */
     private boolean validateInputFields(String customerName, String customerPhone, String customerAddress, String customerCountry, String customerState, String customerPostal) {
         if (customerName.isEmpty() || customerPhone.isEmpty() || customerAddress.isEmpty() ||
                 customerCountry == null || customerState == null || customerPostal.isEmpty()) {
@@ -248,6 +254,10 @@ public class addCustomerController {
         }return "Address does not match required format for Country.";
     }
 
+    /**
+     * Method created to randomly generate a new customer ID
+     * @return
+     */
     private int generateRandomCustomerId() {
         Random random = new Random();
         return random.nextInt(10000); // Generate a random integer within the desired range

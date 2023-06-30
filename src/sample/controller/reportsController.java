@@ -107,6 +107,10 @@ public class reportsController {
         return appointmentSummaries;
     }
 
+    /**
+     * Method I created to query the database tables to summarize total customers grouped by their respective Division
+     * @return
+     */
     public ObservableList<CustomersByState> getCustomersByState() {
         ObservableList<CustomersByState> customersByStates = FXCollections.observableArrayList();
         try (Connection connection = JDBC.openConnection();

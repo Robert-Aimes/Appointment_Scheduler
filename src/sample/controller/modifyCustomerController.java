@@ -145,22 +145,18 @@ public class modifyCustomerController {
     }
 
     /**
-     * Method to retrieve Division ID given a division as a parameter
+     * LAMBDA EXPRESSION to retrieve Division ID given a division as a parameter
      * @param customerState
      * @return
      * @throws SQLException
      */
-    private int getDivisionIdByName(String customerState) throws SQLException{
-        int divisionID = -1;
+    private int getDivisionIdByName(String customerState) throws SQLException {
         ObservableList<firstLevelDivisions> divisionsList = firstLevelDivisionsDb.getAllDivisions();
-        for(firstLevelDivisions division : divisionsList) {
-            if (division.getDivisionName().equals(customerState)) {
-                divisionID = division.getDivisionId();
-                break;
-            }
-        }
-        return divisionID;
-
+        return divisionsList.stream()
+                .filter(division -> division.getDivisionName().equals(customerState))
+                .findFirst()
+                .map(firstLevelDivisions::getDivisionId)
+                .orElse(-1);
     }
 
     /**

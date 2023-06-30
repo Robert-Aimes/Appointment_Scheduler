@@ -302,7 +302,7 @@ public class mainScreenController implements Initializable{
     }
 
     /**
-     * Lambda function created to check if a customer has a related appointment in the appointment table
+     * LAMBDA EXPRESSION created to check if a customer has a related appointment in the appointment table
      * we use the stream() method to convert the appointmentList into a stream. Then, we use the anyMatch method along with a lambda expression to check if there is any appointment with a matching customerId.
      * @param customerID
      * @return
