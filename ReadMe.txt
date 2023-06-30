@@ -19,3 +19,9 @@ Application Directions:
 - Users can select buttons to add new appointments, update or delete a selected appointment from the appointment table. Adding or updating will open a new screen for users to enter the appointment information. Upon saving, the appointment will either be inserted or updated in the MySQL DB Appointment table.
 - Users can select buttons to add new customers, update or delete a selected customer from the customer table. Adding or updating will open a new screen for users to enter the customer information. Upon saving, the customer will either be inserted or updated in the MySQL DB customer Table.
 - From the main screen, users can also select a "Reports" button that will open a new screen to view three different reports about a specific employees appointment schedule, and two other reports for a summarized view of appointments by month and type, and customers by state or province.
+
+Additional Report:
+- The Additional Report that I added in the Reports screen is a summarized view of total customers by state/province (division). Upon entering the Report screen, users the table will query the customer and divisions table and populate a tableview with the total number of customers grouped by division.
+
+MySQL Connector:
+- mysql-connector-java-8.0.25
