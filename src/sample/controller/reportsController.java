@@ -21,31 +21,32 @@ import sample.DAO.JDBC;
 import sample.model.Appointment;
 import sample.model.AppointmentSummary;
 import sample.model.Contacts;
+import sample.model.CustomersByState;
 
 import javax.security.auth.callback.Callback;
 import java.io.IOException;
 import java.sql.*;
 
 public class reportsController {
-    public TableColumn schedApptIdField;
-    public TableColumn schedTitleField;
-    public TableColumn schedTypeField;
-    public TableColumn schedDescriptionField;
-    public TableColumn schedStartDateField;
-    public TableColumn SchedStartTimeField;
-    public TableColumn schedEndDateField;
-    public TableColumn schedEndTimeField;
-    public TableColumn schedCustIdField;
-    public TableColumn<AppointmentSummary, String> apptMonthField;
-    public TableColumn<AppointmentSummary, String> apptTypeField;
-    public TableColumn<AppointmentSummary, Integer> totalApptField;
-    public TableColumn custStateField;
-    public TableColumn totalCustField;
-    public ChoiceBox contactChoice;
-    public Button reportsExitButton;
-    public TableView employeeScheduleTable;
-    public TableView summarizedAppointmentTable;
-    public TableView customerByStateTable;
+    @FXML private TableColumn schedApptIdField;
+    @FXML private TableColumn schedTitleField;
+    @FXML private TableColumn schedTypeField;
+    @FXML private TableColumn schedDescriptionField;
+    @FXML private TableColumn schedStartDateField;
+    @FXML private TableColumn SchedStartTimeField;
+    @FXML private TableColumn schedEndDateField;
+    @FXML private TableColumn schedEndTimeField;
+    @FXML private TableColumn schedCustIdField;
+    @FXML private TableColumn<AppointmentSummary, String> apptMonthField;
+    @FXML private TableColumn<AppointmentSummary, String> apptTypeField;
+    @FXML private TableColumn<AppointmentSummary, Integer> totalApptField;
+    @FXML private TableColumn<CustomersByState, String> custStateField;
+    @FXML private TableColumn<CustomersByState, Integer> totalCustField;
+    @FXML private ChoiceBox contactChoice;
+    @FXML private Button reportsExitButton;
+    @FXML private TableView employeeScheduleTable;
+    @FXML private TableView summarizedAppointmentTable;
+    @FXML private TableView customerByStateTable;
 
     /**
      * Method that changes filters the employee schedule table based on the contact selected in the combo box
@@ -104,6 +105,31 @@ public class reportsController {
         }
 
         return appointmentSummaries;
+    }
+
+    public ObservableList<CustomersByState> getCustomersByState() {
+        ObservableList<CustomersByState> customersByStates = FXCollections.observableArrayList();
+        try (Connection connection = JDBC.openConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT d.Division, COUNT(*) AS TotalCustomers " +
+                     "FROM Customers c " +
+                     "JOIN First_Level_Divisions d ON c.Division_ID = d.Division_ID " +
+                     "GROUP BY d.Division")) {
+
+            while (resultSet.next()) {
+                String division = resultSet.getString("Division");
+                int totalCustomers = resultSet.getInt("TotalCustomers");
+
+                CustomersByState summary = new CustomersByState(division, totalCustomers);
+                customersByStates.add(summary);
+
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customersByStates;
     }
 
     /**
@@ -169,6 +195,9 @@ public class reportsController {
         // Retrieve data and populate table
         ObservableList<AppointmentSummary> appointmentSummaries = getAppointmentSummaries();
         summarizedAppointmentTable.setItems(appointmentSummaries);
+
+        ObservableList<CustomersByState> customersByState = getCustomersByState();
+        customerByStateTable.setItems(customersByState);
 
         for(Contacts contact : contactsList){
             String contactName = contact.getContactName();
