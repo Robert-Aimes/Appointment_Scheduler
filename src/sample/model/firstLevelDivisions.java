@@ -6,7 +6,7 @@ public class firstLevelDivisions {
     public int countryId;
 
     /**
-     *
+     *Constructor for firstLevelDivisions
      * @param divisionId
      * @param countryId
      * @param divisionName

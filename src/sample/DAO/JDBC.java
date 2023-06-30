@@ -15,6 +15,10 @@ public abstract class JDBC {
     private static String password = "Passw0rd!"; //Password
     public static Connection connection; //Connection interface
 
+    /**
+     * Method to open a connection to the MySQL DB through JDBC
+     * @return
+     */
     public static Connection openConnection(){
         try{
             Class.forName(driver); //Locate Driver
@@ -28,6 +32,9 @@ public abstract class JDBC {
         return null;
     }
 
+    /**
+     * Method to close the opened connection
+     */
     public static void closeConnection(){
         try{
             connection.close();

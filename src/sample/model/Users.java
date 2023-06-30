@@ -5,6 +5,12 @@ public class Users {
     public String userName;
     public String userPassword;
 
+    /**
+     * Constructor for Users
+     * @param userId
+     * @param userName
+     * @param userPassword
+     */
     public Users(int userId, String userName, String userPassword) {
         this.userId = userId;
         this.userName = userName;

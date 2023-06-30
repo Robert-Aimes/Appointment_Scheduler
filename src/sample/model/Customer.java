@@ -15,6 +15,20 @@ public class Customer {
     private int custDivisionId;
     private String custDivisionName;
 
+    /**
+     * Constructor for Customer
+     * @param custId
+     * @param custName
+     * @param custAddress
+     * @param custPostalCode
+     * @param custPhone
+     * @param custCreateDate
+     * @param createdBy
+     * @param custLastUpdate
+     * @param lastUpdatedBy
+     * @param custDivisionId
+     * @param custDivisionName
+     */
     public Customer(int custId, String custName, String custAddress, String custPostalCode, String custPhone, LocalDateTime custCreateDate, String createdBy, LocalDateTime custLastUpdate, String lastUpdatedBy, int custDivisionId, String custDivisionName) {
         this.custId = custId;
         this.custName = custName;

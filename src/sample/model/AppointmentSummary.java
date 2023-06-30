@@ -10,6 +10,12 @@ public class AppointmentSummary {
     private String type;
     private int totalAppointments;
 
+    /**
+     * Constructor for AppointmentSummary
+     * @param month
+     * @param type
+     * @param totalAppointments
+     */
     public AppointmentSummary(String month, String type, int totalAppointments) {
         this.month = month;
         this.type = type;

@@ -67,6 +67,11 @@ public class AppointmentDb {
         return appointmentList;
     }
 
+    /**
+     * Method to delete an appointment from the DB table based on appointment id
+     * @param apptId
+     * @throws SQLException
+     */
     public static void deleteAppointment(int apptId) throws SQLException{
         Connection connection = JDBC.openConnection();
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";

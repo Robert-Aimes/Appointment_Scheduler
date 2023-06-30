@@ -245,6 +245,11 @@ public class addCustomerController {
         return false;
     }
 
+    /**
+     * Method to create a custom method if the user entered Address does not match the proper format for the selected Country
+     * @param customerCountry
+     * @return
+     */
     private String getInvalidAddressFormatMessage(String customerCountry) {
         if (customerCountry.equals("U.S")) {
             return "Address field must match the format of: 123 ABC Street, White Plains";
@@ -264,6 +269,10 @@ public class addCustomerController {
         return random.nextInt(10000); // Generate a random integer within the desired range
     }
 
+    /**
+     * Initialize method to populate Country combobox with country options
+     * @throws SQLException
+     */
     @FXML
     public void initialize() throws SQLException{
         ObservableList<Countries> countryList = CountriesDb.getAllCountries();

@@ -11,8 +11,11 @@ import java.io.IOException;
 public class Main extends Application {
 
 
-
-
+    /**
+     * Start method to start the program
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("../view/loginForm.fxml"));

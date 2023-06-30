@@ -5,6 +5,12 @@ public class Contacts {
     private String contactName;
     private String contactEmail;
 
+    /**
+     * Constructor for Contacts
+     * @param contactId
+     * @param contactName
+     * @param contactEmail
+     */
     public Contacts(int contactId, String contactName, String contactEmail){
         this.contactId = contactId;
         this.contactName = contactName;

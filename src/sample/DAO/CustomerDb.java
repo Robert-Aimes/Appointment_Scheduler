@@ -59,6 +59,11 @@ public class CustomerDb {
         return customerList;
     }
 
+    /**
+     * Method to delete a customer from the DB table based on given customer id
+     * @param custId
+     * @throws SQLException
+     */
     public void deleteCustomer(int custId) throws SQLException{
         Connection connection = JDBC.openConnection();
         String query = "DELETE FROM customers WHERE Customer_ID=?";

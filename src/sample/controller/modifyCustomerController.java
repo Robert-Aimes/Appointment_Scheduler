@@ -43,6 +43,11 @@ public class modifyCustomerController {
     private Button modifyCustCancelButton;
     private Customer selectedCustomer;
 
+    /**
+     * Method that takes selected customer from main screen and populates all data in the fxml fields when updating a customer
+     * @param selectedCustomer
+     * @throws SQLException
+     */
     public void setCustomer(Customer selectedCustomer) throws SQLException {
         this.selectedCustomer = selectedCustomer;
         modifyCustIdField.setText(Integer.toString(selectedCustomer.getCustId()));
@@ -185,6 +190,11 @@ public class modifyCustomerController {
         return false;
     }
 
+    /**
+     * Field to generate custom error message if user entered address does not match the required format per selected Country
+     * @param customerCountry
+     * @return
+     */
     private String getInvalidAddressFormatMessage(String customerCountry) {
         if (customerCountry.equals("U.S")) {
             return "Address field must match the format of: 123 ABC Street, White Plains";
@@ -195,6 +205,16 @@ public class modifyCustomerController {
         }return "Address does not match required format for Country.";
     }
 
+    /**
+     * Method to check if all fields have entered data from user
+     * @param customerName
+     * @param customerPhone
+     * @param customerAddress
+     * @param customerCountry
+     * @param customerState
+     * @param customerPostal
+     * @return
+     */
     private boolean validateInputFields(String customerName, String customerPhone, String customerAddress, String customerCountry, String customerState, String customerPostal) {
         if (customerName.isEmpty() || customerPhone.isEmpty() || customerAddress.isEmpty() ||
                 customerCountry == null || customerState == null || customerPostal.isEmpty()) {
@@ -286,6 +306,10 @@ public class modifyCustomerController {
         }
     }
 
+    /**
+     * Initialize method to populate the country options in the combobox drop down
+     * @throws SQLException
+     */
     @FXML
     public void initialize() throws SQLException{
         ObservableList<Countries> countryList = CountriesDb.getAllCountries();

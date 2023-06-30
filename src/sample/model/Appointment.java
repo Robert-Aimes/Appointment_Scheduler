@@ -20,6 +20,23 @@ public class Appointment {
     private int userId;
     private int contactId;
 
+    /**
+     * Constructor for Appointment
+     * @param apptId
+     * @param apptTitle
+     * @param apptDescription
+     * @param apptLocation
+     * @param apptType
+     * @param apptStartTime
+     * @param apptEndTime
+     * @param apptCreateDate
+     * @param apptCreatedBy
+     * @param apptLastUpdate
+     * @param apptLastUpdatedBy
+     * @param customerId
+     * @param userId
+     * @param contactId
+     */
     public Appointment(int apptId, String apptTitle, String apptDescription, String apptLocation, String apptType, LocalDateTime apptStartTime, LocalDateTime apptEndTime, LocalDateTime apptCreateDate, String apptCreatedBy, LocalDateTime apptLastUpdate, String apptLastUpdatedBy, int customerId, int userId, int contactId) {
         this.apptId = apptId;
         this.apptTitle = apptTitle;
