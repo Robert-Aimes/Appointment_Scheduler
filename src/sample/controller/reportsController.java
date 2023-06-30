@@ -192,12 +192,16 @@ public class reportsController {
         apptTypeField.setCellValueFactory(new PropertyValueFactory<>("type"));
         totalApptField.setCellValueFactory(new PropertyValueFactory<>("total"));
 
+        custStateField.setCellValueFactory(new PropertyValueFactory<>("state"));
+        totalCustField.setCellValueFactory(new PropertyValueFactory<>("totalCustomers"));
+
         // Retrieve data and populate table
         ObservableList<AppointmentSummary> appointmentSummaries = getAppointmentSummaries();
         summarizedAppointmentTable.setItems(appointmentSummaries);
 
         ObservableList<CustomersByState> customersByState = getCustomersByState();
         customerByStateTable.setItems(customersByState);
+
 
         for(Contacts contact : contactsList){
             String contactName = contact.getContactName();
