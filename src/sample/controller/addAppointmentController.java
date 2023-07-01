@@ -61,82 +61,72 @@ public class addAppointmentController {
      */
     public void saveButtonClicked(ActionEvent actionEvent) {
         try {
+
+            if (!validateAppointmentFields(addApptStartTimeChoice.getValue(), addApptEndTimeChoice.getValue(), addApptStartDatePicker.getValue(), addApptEndDatePicker.getValue(), addApptTypeField.getText(), addApptDescriptionField.getText(), addApptLocationField.getText(), addApptTitleField.getText(), addApptCustomerIdChoice.getValue(), addApptUserIdChoice.getValue(), addApptContactChoice.getValue())) {
+                return;
+            }
             LocalTime apptStartTime = addApptStartTimeChoice.getValue();
             LocalTime apptEndTime = addApptEndTimeChoice.getValue();
-
-            // Get the selected start and end dates from the date pickers
             LocalDate startDate = addApptStartDatePicker.getValue();
             LocalDate endDate = addApptEndDatePicker.getValue();
 
-
-
-            // Check if the start date is after the end date
             if (startDate.isAfter(endDate)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start date cannot be after the end date.", ButtonType.OK);
                 alert.showAndWait();
                 return;
             }
 
-            // Check if the start date is the same as the end date
             if (startDate.isEqual(endDate)) {
-                // Check if the start time is after the end time
                 if (apptStartTime.isAfter(apptEndTime)) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "The start time cannot be after the end time on the same day.", ButtonType.OK);
                     alert.showAndWait();
                     return;
                 }
             } else {
-                // Start date and end date are different, not allowed
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start and end times must be on the same day.", ButtonType.OK);
                 alert.showAndWait();
                 return;
             }
 
-            // Capture startDateTime and endDateTime in the user's local time zone
             LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
             LocalDateTime endDateTime = LocalDateTime.of(endDate, apptEndTime);
 
-// Get the user's time zone
+            // Get the user's time zone
             ZoneId userTimeZone = ZoneId.systemDefault();
 
-// Convert the user's local time to UTC
-            ZonedDateTime startLocalDateTime = startDateTime.atZone(userTimeZone);
-            ZonedDateTime endLocalDateTime = endDateTime.atZone(userTimeZone);
+            // Convert the user's local time to UTC
+            ZonedDateTime userStartDateTime = ZonedDateTime.of(startDateTime, userTimeZone);
+            ZonedDateTime userEndDateTime = ZonedDateTime.of(endDateTime, userTimeZone);
+            ZonedDateTime utcStartDateTime = userStartDateTime.withZoneSameInstant(ZoneOffset.UTC);
+            ZonedDateTime utcEndDateTime = userEndDateTime.withZoneSameInstant(ZoneOffset.UTC);
 
-            ZonedDateTime startUtcDateTime = startLocalDateTime.withZoneSameInstant(ZoneOffset.UTC);
-            ZonedDateTime endUtcDateTime = endLocalDateTime.withZoneSameInstant(ZoneOffset.UTC);
+            String utcStartTime = convertToUTC(startDate + " " + apptStartTime + ":00");
+            String utcEndTime = convertToUTC(endDate + " " + apptEndTime + ":00");
 
 
-            // Convert the start and end LocalDateTime objects to EST (America/New_York)
+
             ZoneId estTimeZone = ZoneId.of("America/New_York");
             ZonedDateTime estStartDateTime = ZonedDateTime.of(startDateTime, estTimeZone);
             ZonedDateTime estEndDateTime = ZonedDateTime.of(endDateTime, estTimeZone);
 
-            // Check if the appointment falls within business hours (8:00 a.m. to 10:00 p.m. EST)
             LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
             LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
-
-            if (estStartDateTime.toLocalTime().isBefore(estBusinessHoursStart) || estEndDateTime.toLocalTime().isAfter(estBusinessHoursEnd)) {
-                // Display an error message for scheduling outside business hours
+            if (estStartDateTime.toLocalTime().isBefore(estBusinessHoursStart) ||
+                    estEndDateTime.toLocalTime().isAfter(estBusinessHoursEnd)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.", ButtonType.OK);
                 alert.showAndWait();
                 return;
             }
 
-            // Check for overlapping appointments
             List<Appointment> existingAppointments = AppointmentDb.getAllAppointments();
             for (Appointment appointment : existingAppointments) {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
 
-                // Check if the appointments belong to the same customer
                 if (appointment.getCustomerId() == addApptCustomerIdChoice.getValue()) {
-                    // Check for overlapping appointments
                     if ((startDateTime.isAfter(existingStartDateTime) && startDateTime.isBefore(existingEndDateTime)) ||
                             (endDateTime.isAfter(existingStartDateTime) && endDateTime.isBefore(existingEndDateTime)) ||
                             (startDateTime.isEqual(existingStartDateTime) || endDateTime.isEqual(existingEndDateTime))) {
-
-                        // Display an error message for overlapping appointments
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
                         alert.showAndWait();
                         return;
@@ -144,7 +134,7 @@ public class addAppointmentController {
                 }
             }
 
-            int apptId = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
+            int apptId = Integer.parseInt(String.valueOf((int) (Math.random() * 1000)));
             String apptType = addApptTypeField.getText();
             String apptDescription = addApptDescriptionField.getText();
             String apptLocation = addApptLocationField.getText();
@@ -156,19 +146,12 @@ public class addAppointmentController {
             String lastUpdatedBy = createdBy;
             int contactId = getContactIdByName(contactName);
             LocalDateTime currentDateTime = LocalDateTime.now();
-
-            // Format the current date and time as a string
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String createdDateTime = currentDateTime.format(formatter);
 
-            if (!validateAppointmentFields(apptStartTime, apptEndTime, startDate, endDate, apptType, apptDescription, apptLocation, apptTitle, customerId, userId, contactName)) {
-                return; // Exit the method if any field is invalid
-            }
 
-            // Get UserID - you need to have a query to retrieve the ID from the entered username in the login controller
 
-            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, estStartDateTime.toLocalDateTime(), estEndDateTime.toLocalDateTime(), currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
-
+            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime.toLocalDateTime(), utcEndDateTime.toLocalDateTime(), currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
             String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             Connection connection = JDBC.openConnection();
             PreparedStatement ps = connection.prepareStatement(insertStatement);
@@ -177,8 +160,8 @@ public class addAppointmentController {
             ps.setString(3, apptDescription);
             ps.setString(4, apptLocation);
             ps.setString(5, apptType);
-            ps.setTimestamp(6, Timestamp.valueOf(startUtcDateTime.toLocalDateTime()));
-            ps.setTimestamp(7, Timestamp.valueOf(endUtcDateTime.toLocalDateTime()));
+            ps.setTimestamp(6, Timestamp.valueOf(utcStartTime));
+            ps.setTimestamp(7, Timestamp.valueOf(utcEndTime));
             ps.setTimestamp(8, Timestamp.valueOf(currentDateTime));
             ps.setString(9, createdBy);
             ps.setTimestamp(10, Timestamp.valueOf(currentDateTime));
@@ -186,7 +169,6 @@ public class addAppointmentController {
             ps.setInt(12, customerId);
             ps.setInt(13, userId);
             ps.setInt(14, contactId);
-
             ps.execute();
 
             Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
@@ -279,6 +261,20 @@ public class addAppointmentController {
         }
         return contactID;
     }
+
+    /**
+     * Lambda expression to convert a given String to UTC time format
+     * @param dateTime
+     * @return
+     */
+    public static String convertToUTC(String dateTime) {
+        return Timestamp.valueOf(dateTime)
+                .toLocalDateTime()
+                .atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(ZoneId.of("UTC"))
+                .toLocalDateTime()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
     /**
      * Method to check if all fxml fields are completed when clicking te save button
      * @param startTime
@@ -295,11 +291,11 @@ public class addAppointmentController {
      * @return
      */
     private boolean validateAppointmentFields(LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate,
-                                              String type, String description, String location, String title, int customerId, int userId, String contactName) {
+                                              String type, String description, String location, String title, Integer customerId, Integer userId, String contactName) {
 
         if (startTime == null || endTime == null || startDate == null || endDate == null ||
                 type.isEmpty() || description.isEmpty() || location.isEmpty() || title.isEmpty() ||
-                contactName == null) {
+                contactName == null || customerId == null || userId == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Please fill in all the required fields.", ButtonType.OK);
             alert.showAndWait();
             return false; // Return false if any field is blank

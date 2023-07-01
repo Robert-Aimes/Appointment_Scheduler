@@ -60,6 +60,10 @@ public class modifyAppointmentController {
      */
     public void saveButtonClicked(ActionEvent actionEvent) {
         try{
+            if (!validateAppointmentFields(modifyApptStartTimeChoice.getValue(), modifyApptEndTimeChoice.getValue(), modifyApptStartDatePicker.getValue(), modifyApptEndDatePicker.getValue(), modifyApptTypeField.getText(), modifyApptDescriptionField.getText(), modifyApptLocationField.getText(), modifyApptTitleField.getText(), modifyApptCustomerIdChoice.getValue(), modifyApptUserIdChoice.getValue(), modifyApptContactChoice.getValue())) {
+                return;
+            }
+
             LocalTime apptStartTime = modifyApptStartTimeChoice.getValue();
             LocalTime apptEndTime = modifyApptEndTimeChoice.getValue();
 
@@ -120,19 +124,21 @@ public class modifyAppointmentController {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
 
-                // Check if the appointments belong to the same customer
-                if (appointment.getCustomerId() == modifyApptCustomerIdChoice.getValue()) {
-                    // Check for overlapping appointments
-                    if ((utcStartDateTime.isAfter(existingStartDateTime) && utcStartDateTime.isBefore(existingEndDateTime)) ||
-                            (utcEndDateTime.isAfter(existingStartDateTime) && utcEndDateTime.isBefore(existingEndDateTime)) ||
-                            (utcStartDateTime.isEqual(existingStartDateTime) || utcEndDateTime.isEqual(existingEndDateTime))) {
+                if(appointment.getApptId() != Integer.parseInt(modifyApptIdField.getText())){
+                    if (appointment.getCustomerId() == modifyApptCustomerIdChoice.getValue()) {
+                        // Check for overlapping appointments
+                        if ((utcStartDateTime.isAfter(existingStartDateTime) && utcStartDateTime.isBefore(existingEndDateTime)) ||
+                                (utcEndDateTime.isAfter(existingStartDateTime) && utcEndDateTime.isBefore(existingEndDateTime)) ||
+                                (utcStartDateTime.isEqual(existingStartDateTime) || utcEndDateTime.isEqual(existingEndDateTime))) {
 
-                        // Display an error message for overlapping appointments
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
-                        alert.showAndWait();
-                        return;
+                            // Display an error message for overlapping appointments
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
+                            alert.showAndWait();
+                            return;
+                        }
                     }
                 }
+
             }
 
             //Need to work on some logic here to keep the created by and data values from original record
@@ -156,11 +162,8 @@ public class modifyAppointmentController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String createdDateTime = currentDateTime.format(formatter);
 
-            //Get UserID need to have query getting the ID from the entered username in logincontroller
 
-            if (!validateAppointmentFields(apptStartTime, apptEndTime, startDate, endDate, apptType, apptDescription, apptLocation, apptTitle, customerId, userId, contactName)) {
-                return; // Exit the method if any field is invalid
-            }
+
 
             Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime, utcEndDateTime, currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
 
@@ -253,11 +256,11 @@ public class modifyAppointmentController {
      * @return
      */
     private boolean validateAppointmentFields(LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate,
-                                              String type, String description, String location, String title, int customerId, int userId, String contactName) {
+                                              String type, String description, String location, String title, Integer customerId, Integer userId, String contactName) {
 
         if (startTime == null || endTime == null || startDate == null || endDate == null ||
                 type.isEmpty() || description.isEmpty() || location.isEmpty() || title.isEmpty() ||
-                contactName == null) {
+                contactName == null || customerId == null || userId == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Please fill in all the required fields.", ButtonType.OK);
             alert.showAndWait();
             return false; // Return false if any field is blank
