@@ -270,7 +270,7 @@ public class addCustomerController {
     }
 
     /**
-     * Initialize method to populate Country combobox with country options
+     * Initialize method to populate Country and Division combobox with country/division options
      * @throws SQLException
      */
     @FXML
@@ -282,7 +282,15 @@ public class addCustomerController {
             countries.add(countryName);
         }
 
+        ObservableList<firstLevelDivisions> divisionsList = firstLevelDivisionsDb.getAllDivisions();
+        ObservableList<String> divisions = FXCollections.observableArrayList();
+        for(firstLevelDivisions division : divisionsList){
+            String divisionName = division.getDivisionName();
+            divisions.add(divisionName);
+        }
+
         addCustCountryField.setItems(countries);
+        addCustStateField.setItems(divisions);
 
     }
 

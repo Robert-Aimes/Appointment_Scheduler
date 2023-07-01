@@ -319,7 +319,15 @@ public class modifyCustomerController {
             countries.add(countryName);
         }
 
+        ObservableList<firstLevelDivisions> divisionsList = firstLevelDivisionsDb.getAllDivisions();
+        ObservableList<String> divisions = FXCollections.observableArrayList();
+        for(firstLevelDivisions division : divisionsList){
+            String divisionName = division.getDivisionName();
+            divisions.add(divisionName);
+        }
+
         modifyCustCountryField.setItems(countries);
+        modifyCustStateField.setItems(divisions);
 
 
 
