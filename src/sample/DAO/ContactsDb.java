@@ -2,7 +2,6 @@ package sample.DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import jdk.internal.jimage.ImageStrings;
 import sample.model.Appointment;
 import sample.model.Contacts;
 
