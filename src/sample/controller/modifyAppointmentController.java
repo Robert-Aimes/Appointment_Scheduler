@@ -290,29 +290,31 @@ public class modifyAppointmentController {
      */
     public void setAppointment(Appointment selectedAppointment) throws SQLException {
         this.selectedAppointment = selectedAppointment;
+
         modifyApptIdField.setText(Integer.toString(selectedAppointment.getApptId()));
         modifyApptTitleField.setText(selectedAppointment.getApptTitle());
         modifyApptDescriptionField.setText(selectedAppointment.getApptDescription());
         modifyApptLocationField.setText(selectedAppointment.getApptLocation());
         modifyApptTypeField.setText(selectedAppointment.getApptType());
 
+        // Convert UTC start date/time to user's local date/time
         LocalDateTime startDateTime = selectedAppointment.getApptStartTime();
+        ZoneId userTimeZone = ZoneId.systemDefault();
+        ZonedDateTime userStartDateTime = startDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+        LocalDate startDate = userStartDateTime.toLocalDate();
+        LocalTime startTime = userStartDateTime.toLocalTime();
 
-// Extract the date and time components
-        LocalDate startDate = startDateTime.toLocalDate();
-        LocalTime startTime = startDateTime.toLocalTime();
-
-// Set the date and time values in the fields
+        // Set the converted date and time values in the fields
         modifyApptStartDatePicker.setValue(startDate);
         modifyApptStartTimeChoice.setValue(startTime);
 
+        // Convert UTC end date/time to user's local date/time
         LocalDateTime endDateTime = selectedAppointment.getApptEndTime();
+        ZonedDateTime userEndDateTime = endDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+        LocalDate endDate = userEndDateTime.toLocalDate();
+        LocalTime endTime = userEndDateTime.toLocalTime();
 
-// Extract the date and time components
-        LocalDate endDate = endDateTime.toLocalDate();
-        LocalTime endTime = endDateTime.toLocalTime();
-
-// Set the date and time values in the fields
+        // Set the converted date and time values in the fields
         modifyApptEndDatePicker.setValue(endDate);
         modifyApptEndTimeChoice.setValue(endTime);
 
@@ -323,7 +325,6 @@ public class modifyAppointmentController {
         modifyApptCustomerIdChoice.setValue(selectedAppointment.getCustomerId());
         LocalDateTime createdDate = selectedAppointment.getApptCreateDate();
         String createdBy = selectedAppointment.getApptCreatedBy();
-
     }
 
     /**

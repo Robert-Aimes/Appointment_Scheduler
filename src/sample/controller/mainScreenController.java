@@ -1,6 +1,8 @@
 package sample.controller;
 
 import com.sun.javafx.stage.EmbeddedWindow;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -330,24 +332,29 @@ public class mainScreenController implements Initializable{
      */
     public void checkAppointmentTimes(LocalDateTime logInTime) throws SQLException {
         ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
-
         boolean foundAppointment = false;
-        for(Appointment appt : apptList){
+
+        for (Appointment appt : apptList) {
             LocalDateTime apptStartTime = appt.getApptStartTime();
 
+            // Convert appointment start time from UTC to user's local time
+            ZoneId userTimeZone = ZoneId.systemDefault();
+            ZonedDateTime apptStartLocal = apptStartTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+
             // Calculate the time difference between the current time and the appointment's start time
-            Duration timeDifference = Duration.between(logInTime, apptStartTime);
-            long minutesDifference = timeDifference.toMinutes();
+            Duration timeDifference = Duration.between(logInTime, apptStartLocal.toLocalDateTime());
+            long minutesDifference = timeDifference.toMinutesPart();
 
             // Check if the appointment's start time is within 15 minutes of the current time
-            if (minutesDifference >= -15 && minutesDifference <= 15) {
+            if (minutesDifference >= 0 && minutesDifference <= 15) {
                 // Display an alert
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: " + appt.getApptId() + " Start Date and Time: " + appt.getApptStartTime(), ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: " + appt.getApptId() + " Start Date and Time: " + apptStartLocal, ButtonType.OK);
                 alert.showAndWait();
+                foundAppointment = true; // Set the flag to true
                 break; // Exit the loop after displaying the alert for the first appointment found
             }
-
         }
+
         if (!foundAppointment) {
             // Display an alert indicating no appointments within 15 minutes
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "There are no appointments within 15 minutes.", ButtonType.OK);
@@ -359,7 +366,27 @@ public class mainScreenController implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         try {
-            appointmentTable.setItems(AppointmentDb.getAllAppointments());
+            ObservableList<Appointment> allAppointments = AppointmentDb.getAllAppointments();
+
+            // Create a cell value factory for the start time column
+            appointmentStartColumn.setCellValueFactory(cellData -> {
+                Appointment appointment = cellData.getValue();
+                LocalDateTime startDateTime = appointment.getApptStartTime();
+                ZoneId userTimeZone = ZoneId.systemDefault();
+                ZonedDateTime userStartDateTime = startDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+                return new SimpleStringProperty(userStartDateTime.toLocalDateTime().toString());
+            });
+
+            // Create a cell value factory for the end time column
+            appointmentEndColumn.setCellValueFactory(cellData -> {
+                Appointment appointment = cellData.getValue();
+                LocalDateTime endDateTime = appointment.getApptEndTime();
+                ZoneId userTimeZone = ZoneId.systemDefault();
+                ZonedDateTime userEndDateTime = endDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+                return new SimpleStringProperty(userEndDateTime.toLocalDateTime().toString());
+            });
+
+            appointmentTable.setItems(FXCollections.observableArrayList(allAppointments));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -369,8 +396,6 @@ public class mainScreenController implements Initializable{
         appointmentDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("apptDescription"));
         appointmentLocationColumn.setCellValueFactory(new PropertyValueFactory<>("apptLocation"));
         appointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("apptType"));
-        appointmentStartColumn.setCellValueFactory(new PropertyValueFactory<>("apptStartTime"));
-        appointmentEndColumn.setCellValueFactory(new PropertyValueFactory<>("apptEndTime"));
         appointmentCustomerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         appointmentContactColumn.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         appointmentUserIdColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));

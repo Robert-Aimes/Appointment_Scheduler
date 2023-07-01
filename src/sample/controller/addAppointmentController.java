@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.*;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -59,13 +60,15 @@ public class addAppointmentController {
      * @throws IOException
      */
     public void saveButtonClicked(ActionEvent actionEvent) {
-        try{
+        try {
             LocalTime apptStartTime = addApptStartTimeChoice.getValue();
             LocalTime apptEndTime = addApptEndTimeChoice.getValue();
 
             // Get the selected start and end dates from the date pickers
             LocalDate startDate = addApptStartDatePicker.getValue();
             LocalDate endDate = addApptEndDatePicker.getValue();
+
+
 
             // Check if the start date is after the end date
             if (startDate.isAfter(endDate)) {
@@ -82,27 +85,34 @@ public class addAppointmentController {
                     alert.showAndWait();
                     return;
                 }
+            } else {
+                // Start date and end date are different, not allowed
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Start and end times must be on the same day.", ButtonType.OK);
+                alert.showAndWait();
+                return;
             }
 
-
-            // Combine the selected date and time into LocalDateTime objects
+            // Capture startDateTime and endDateTime in the user's local time zone
             LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
             LocalDateTime endDateTime = LocalDateTime.of(endDate, apptEndTime);
 
-            // Convert the LocalDateTime objects to UTC by applying the user's time zone offset
+// Get the user's time zone
             ZoneId userTimeZone = ZoneId.systemDefault();
-            ZoneOffset userOffset = userTimeZone.getRules().getOffset(startDateTime);
-            Instant startInstant = startDateTime.toInstant(userOffset);
-            Instant endInstant = endDateTime.toInstant(userOffset);
 
-            // Convert the UTC Instant values back to LocalDateTime objects
-            LocalDateTime utcStartDateTime = LocalDateTime.ofInstant(startInstant, ZoneOffset.UTC);
-            LocalDateTime utcEndDateTime = LocalDateTime.ofInstant(endInstant, ZoneOffset.UTC);
+// Convert the user's local time to UTC
+            ZonedDateTime startLocalDateTime = startDateTime.atZone(userTimeZone);
+            ZonedDateTime endLocalDateTime = endDateTime.atZone(userTimeZone);
+
+            ZonedDateTime startUtcDateTime = startLocalDateTime.withZoneSameInstant(ZoneOffset.UTC);
+            ZonedDateTime endUtcDateTime = endLocalDateTime.withZoneSameInstant(ZoneOffset.UTC);
+
+
+            // Convert the start and end LocalDateTime objects to EST (America/New_York)
+            ZoneId estTimeZone = ZoneId.of("America/New_York");
+            ZonedDateTime estStartDateTime = ZonedDateTime.of(startDateTime, estTimeZone);
+            ZonedDateTime estEndDateTime = ZonedDateTime.of(endDateTime, estTimeZone);
 
             // Check if the appointment falls within business hours (8:00 a.m. to 10:00 p.m. EST)
-            ZoneId estTimeZone = ZoneId.of("America/New_York");
-            LocalDateTime estStartDateTime = utcStartDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(estTimeZone).toLocalDateTime();
-            LocalDateTime estEndDateTime = utcEndDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(estTimeZone).toLocalDateTime();
             LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
             LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
 
@@ -113,7 +123,6 @@ public class addAppointmentController {
                 return;
             }
 
-            //Not sure if this is working
             // Check for overlapping appointments
             List<Appointment> existingAppointments = AppointmentDb.getAllAppointments();
             for (Appointment appointment : existingAppointments) {
@@ -123,9 +132,9 @@ public class addAppointmentController {
                 // Check if the appointments belong to the same customer
                 if (appointment.getCustomerId() == addApptCustomerIdChoice.getValue()) {
                     // Check for overlapping appointments
-                    if ((utcStartDateTime.isAfter(existingStartDateTime) && utcStartDateTime.isBefore(existingEndDateTime)) ||
-                            (utcEndDateTime.isAfter(existingStartDateTime) && utcEndDateTime.isBefore(existingEndDateTime)) ||
-                            (utcStartDateTime.isEqual(existingStartDateTime) || utcEndDateTime.isEqual(existingEndDateTime))) {
+                    if ((startDateTime.isAfter(existingStartDateTime) && startDateTime.isBefore(existingEndDateTime)) ||
+                            (endDateTime.isAfter(existingStartDateTime) && endDateTime.isBefore(existingEndDateTime)) ||
+                            (startDateTime.isEqual(existingStartDateTime) || endDateTime.isEqual(existingEndDateTime))) {
 
                         // Display an error message for overlapping appointments
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
@@ -145,9 +154,7 @@ public class addAppointmentController {
             String contactName = addApptContactChoice.getValue();
             String createdBy = SharedData.getEnteredUsername();
             String lastUpdatedBy = createdBy;
-
             int contactId = getContactIdByName(contactName);
-
             LocalDateTime currentDateTime = LocalDateTime.now();
 
             // Format the current date and time as a string
@@ -158,24 +165,20 @@ public class addAppointmentController {
                 return; // Exit the method if any field is invalid
             }
 
+            // Get UserID - you need to have a query to retrieve the ID from the entered username in the login controller
 
-            //Get UserID need to have query getting the ID from the entered username in logincontroller
-
-            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime, utcEndDateTime, currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
+            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, estStartDateTime.toLocalDateTime(), estEndDateTime.toLocalDateTime(), currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
 
             String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
             Connection connection = JDBC.openConnection();
             PreparedStatement ps = connection.prepareStatement(insertStatement);
             ps.setInt(1, apptId);
             ps.setString(2, apptTitle);
             ps.setString(3, apptDescription);
             ps.setString(4, apptLocation);
-            ps.setString(5,apptType);
-            //ps.setTimestamp(6, Timestamp.valueOf(startLocalDateTimeToAdd));
-            ps.setTimestamp(6, Timestamp.valueOf(utcStartDateTime));
-            ps.setTimestamp(7, Timestamp.valueOf(utcEndDateTime));
-            //need to verify this is correct
+            ps.setString(5, apptType);
+            ps.setTimestamp(6, Timestamp.valueOf(startUtcDateTime.toLocalDateTime()));
+            ps.setTimestamp(7, Timestamp.valueOf(endUtcDateTime.toLocalDateTime()));
             ps.setTimestamp(8, Timestamp.valueOf(currentDateTime));
             ps.setString(9, createdBy);
             ps.setTimestamp(10, Timestamp.valueOf(currentDateTime));
@@ -184,7 +187,6 @@ public class addAppointmentController {
             ps.setInt(13, userId);
             ps.setInt(14, contactId);
 
-            //System.out.println("ps " + ps);
             ps.execute();
 
             Parent mainScreenWindow = FXMLLoader.load(getClass().getResource("../view/mainScreen.fxml"));
@@ -192,7 +194,6 @@ public class addAppointmentController {
             Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             window.setScene(mainScreenScene);
             window.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
