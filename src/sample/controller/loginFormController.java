@@ -93,7 +93,7 @@ public class loginFormController implements Initializable{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/mainScreen.fxml"));
             Parent scene = loader.load();
             mainScreenController controller = loader.getController();
-            controller.checkAppointmentTimes(logInTime);
+            controller.checkAppointmentTimes();
             stage.setTitle("Main Screen");
             stage.setScene(new Scene(scene));
             stage.show();

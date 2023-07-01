@@ -327,28 +327,28 @@ public class mainScreenController implements Initializable{
 
     /**
      * Created method to check if there is an appointment within 15 minutes of the users log in time
-     * @param logInTime
+     * @param
      * @throws SQLException
      */
-    public void checkAppointmentTimes(LocalDateTime logInTime) throws SQLException {
+    public void checkAppointmentTimes() throws SQLException {
+        LocalDateTime logInTime = LocalDateTime.now(ZoneId.systemDefault());
         ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
         boolean foundAppointment = false;
 
         for (Appointment appt : apptList) {
             LocalDateTime apptStartTime = appt.getApptStartTime();
-
             // Convert appointment start time from UTC to user's local time
             ZoneId userTimeZone = ZoneId.systemDefault();
             ZonedDateTime apptStartLocal = apptStartTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
 
             // Calculate the time difference between the current time and the appointment's start time
-            Duration timeDifference = Duration.between(logInTime, apptStartLocal.toLocalDateTime());
-            long minutesDifference = timeDifference.toMinutesPart();
+            long minutesDifference = Duration.between(logInTime, apptStartLocal).toMinutes();
 
             // Check if the appointment's start time is within 15 minutes of the current time
             if (minutesDifference >= 0 && minutesDifference <= 15) {
                 // Display an alert
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: " + appt.getApptId() + " Start Date and Time: " + apptStartLocal, ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: "
+                        + appt.getApptId() + " Start Date and Time: " + apptStartLocal, ButtonType.OK);
                 alert.showAndWait();
                 foundAppointment = true; // Set the flag to true
                 break; // Exit the loop after displaying the alert for the first appointment found
@@ -361,6 +361,7 @@ public class mainScreenController implements Initializable{
             alert.showAndWait();
         }
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
