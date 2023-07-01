@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"sample.controller"},{"l":"sample.DAO"},{"l":"sample.main"},{"l":"sample.model"}]
