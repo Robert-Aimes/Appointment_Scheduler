@@ -106,8 +106,9 @@ public class addAppointmentController {
 
 
             ZoneId estTimeZone = ZoneId.of("America/New_York");
-            ZonedDateTime estStartDateTime = ZonedDateTime.of(startDateTime, estTimeZone);
-            ZonedDateTime estEndDateTime = ZonedDateTime.of(endDateTime, estTimeZone);
+            // Convert appointment start and end times to EST
+            ZonedDateTime estStartDateTime = startDateTime.atZone(userTimeZone).withZoneSameInstant(estTimeZone);
+            ZonedDateTime estEndDateTime = endDateTime.atZone(userTimeZone).withZoneSameInstant(estTimeZone);
 
             LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
             LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
@@ -119,15 +120,23 @@ public class addAppointmentController {
             }
 
             List<Appointment> existingAppointments = AppointmentDb.getAllAppointments();
+
             for (Appointment appointment : existingAppointments) {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
 
+                // Convert existing appointment times from UTC to user's local time
+                ZonedDateTime existingStartZoned = existingStartDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+                LocalDateTime existingStartLocal = existingStartZoned.toLocalDateTime();
+
+                ZonedDateTime existingEndZoned = existingEndDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+                LocalDateTime existingEndLocal = existingEndZoned.toLocalDateTime();
+
                 if (appointment.getCustomerId() == addApptCustomerIdChoice.getValue()) {
-                    if ((startDateTime.isAfter(existingStartDateTime) && startDateTime.isBefore(existingEndDateTime)) ||
-                            (endDateTime.isAfter(existingStartDateTime) && endDateTime.isBefore(existingEndDateTime)) ||
-                            (startDateTime.isEqual(existingStartDateTime) || endDateTime.isEqual(existingEndDateTime))) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
+                    if ((startDateTime.isAfter(existingStartLocal) && startDateTime.isBefore(existingEndLocal)) ||
+                            (endDateTime.isAfter(existingStartLocal) && endDateTime.isBefore(existingEndLocal)) ||
+                            (startDateTime.isBefore(existingStartLocal) && endDateTime.isAfter(existingEndLocal))) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments for a customer is not allowed.", ButtonType.OK);
                         alert.showAndWait();
                         return;
                     }
