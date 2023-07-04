@@ -371,12 +371,17 @@ public class mainScreenController implements Initializable{
             ObservableList<Appointment> allAppointments = AppointmentDb.getAllAppointments();
 
             // Create a cell value factory for the start time column
+            //This still isn't working right
             appointmentStartColumn.setCellValueFactory(cellData -> {
                 Appointment appointment = cellData.getValue();
                 LocalDateTime startDateTime = appointment.getApptStartTime();
                 ZoneId userTimeZone = ZoneId.systemDefault();
-                ZonedDateTime userStartDateTime = startDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-                return new SimpleStringProperty(userStartDateTime.toLocalDateTime().toString());
+                ZonedDateTime userZDT = ZonedDateTime.of(startDateTime, userTimeZone);
+                ZoneId utcTime = ZoneId.of("UTC");
+                ZonedDateTime utcZDT = ZonedDateTime.ofInstant(userZDT.toInstant(),utcTime);
+                userZDT = ZonedDateTime.ofInstant(utcZDT.toInstant(), userTimeZone);
+
+                return new SimpleStringProperty(userZDT.toString());
             });
 
             // Create a cell value factory for the end time column
@@ -384,8 +389,12 @@ public class mainScreenController implements Initializable{
                 Appointment appointment = cellData.getValue();
                 LocalDateTime endDateTime = appointment.getApptEndTime();
                 ZoneId userTimeZone = ZoneId.systemDefault();
-                ZonedDateTime userEndDateTime = endDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-                return new SimpleStringProperty(userEndDateTime.toLocalDateTime().toString());
+                ZonedDateTime userZDT = ZonedDateTime.of(endDateTime, userTimeZone);
+                ZoneId utcTime = ZoneId.of("UTC");
+                ZonedDateTime utcZDT = ZonedDateTime.ofInstant(userZDT.toInstant(),utcTime);
+                userZDT = ZonedDateTime.ofInstant(utcZDT.toInstant(), userTimeZone);
+                return new SimpleStringProperty(userZDT.toString());
+
             });
 
             appointmentTable.setItems(FXCollections.observableArrayList(allAppointments));
