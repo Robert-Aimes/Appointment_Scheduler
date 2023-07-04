@@ -124,18 +124,21 @@ public class modifyAppointmentController {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
 
-                if(appointment.getApptId() != Integer.parseInt(modifyApptIdField.getText())){
-                    if (appointment.getCustomerId() == modifyApptCustomerIdChoice.getValue()) {
-                        // Check for overlapping appointments
-                        if ((utcStartDateTime.isAfter(existingStartDateTime) && utcStartDateTime.isBefore(existingEndDateTime)) ||
-                                (utcEndDateTime.isAfter(existingStartDateTime) && utcEndDateTime.isBefore(existingEndDateTime)) ||
-                                (utcStartDateTime.isEqual(existingStartDateTime) || utcEndDateTime.isEqual(existingEndDateTime))) {
+                // Convert existing appointment times from UTC to user's local time
+                ZonedDateTime existingStartZoned = existingStartDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+                LocalDateTime existingStartLocal = existingStartZoned.toLocalDateTime();
 
-                            // Display an error message for overlapping appointments
-                            Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments are not allowed.", ButtonType.OK);
-                            alert.showAndWait();
-                            return;
-                        }
+                ZonedDateTime existingEndZoned = existingEndDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
+                LocalDateTime existingEndLocal = existingEndZoned.toLocalDateTime();
+
+                if(appointment.getApptId() != Integer.parseInt(modifyApptIdField.getText())){
+                    //updated code to be for any overlapping appt
+                    if ((startDateTime.isAfter(existingStartLocal) && startDateTime.isBefore(existingEndLocal)) ||
+                            (endDateTime.isAfter(existingStartLocal) && endDateTime.isBefore(existingEndLocal)) ||
+                            (startDateTime.isBefore(existingStartLocal) && endDateTime.isAfter(existingEndLocal))) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping customer appointments are not allowed.", ButtonType.OK);
+                        alert.showAndWait();
+                        return;
                     }
                 }
 

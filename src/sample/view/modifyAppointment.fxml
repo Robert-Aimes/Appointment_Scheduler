@@ -4,14 +4,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="807.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.modifyAppointmentController">
+<AnchorPane prefHeight="567.0" prefWidth="661.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.modifyAppointmentController">
     <children>
         <Label layoutX="28.0" layoutY="90.0" text="Appointment ID">
             <font>
                 <Font size="16.0" />
             </font>
         </Label>
-        <Label layoutX="115.0" layoutY="27.0" text="Modify Appointment">
+        <Label layoutX="251.0" layoutY="25.0" text="Modify Appointment">
             <font>
                 <Font name="System Bold" size="20.0" />
             </font>
@@ -22,7 +22,7 @@
         <TextField fx:id="modifyApptLocationField" layoutX="162.0" layoutY="312.0" />
         <TextField fx:id="modifyApptTitleField" layoutX="163.0" layoutY="143.0" />
         <DatePicker fx:id="modifyApptStartDatePicker" layoutX="148.0" layoutY="370.0" />
-        <DatePicker fx:id="modifyApptEndDatePicker" layoutX="151.0" layoutY="478.0" />
+        <DatePicker fx:id="modifyApptEndDatePicker" layoutX="462.0" layoutY="370.0" />
         <Label layoutX="64.0" layoutY="143.0" text="Title">
             <font>
                 <Font size="16.0" />
@@ -38,7 +38,7 @@
                 <Font size="16.0" />
             </font>
         </Label>
-        <Label layoutX="59.0" layoutY="686.0" text="Contact">
+        <Label layoutX="387.0" layoutY="199.0" text="Contact">
             <font>
                 <Font size="16.0" />
             </font>
@@ -59,31 +59,31 @@
                 <Font size="16.0" />
             </font>
         </Label>
-        <Label layoutX="52.0" layoutY="478.0" text="End Date">
+        <Label layoutX="382.0" layoutY="370.0" text="End Date">
             <font>
                 <Font size="16.0" />
             </font>
         </Label>
-        <ComboBox fx:id="modifyApptEndTimeChoice" layoutX="160.0" layoutY="536.0" prefWidth="150.0" />
-        <Label layoutX="52.0" layoutY="536.0" text="End Time">
+        <ComboBox fx:id="modifyApptEndTimeChoice" layoutX="474.0" layoutY="423.0" prefWidth="150.0" />
+        <Label layoutX="381.0" layoutY="423.0" text="End Time">
             <font>
                 <Font size="16.0" />
             </font>
         </Label>
-        <ComboBox fx:id="modifyApptCustomerIdChoice" layoutX="160.0" layoutY="592.0" prefWidth="150.0" />
-        <ComboBox fx:id="modifyApptUserIdChoice" layoutX="162.0" layoutY="642.0" prefWidth="150.0" />
-        <ComboBox fx:id="modifyApptContactChoice" layoutX="160.0" layoutY="686.0" prefWidth="150.0" />
-        <Label layoutX="40.0" layoutY="592.0" text="Customer ID">
+        <ComboBox fx:id="modifyApptCustomerIdChoice" layoutX="474.0" layoutY="312.0" prefWidth="150.0" />
+        <ComboBox fx:id="modifyApptUserIdChoice" layoutX="474.0" layoutY="254.0" prefWidth="150.0" />
+        <ComboBox fx:id="modifyApptContactChoice" layoutX="474.0" layoutY="199.0" prefWidth="150.0" />
+        <Label layoutX="370.0" layoutY="312.0" text="Customer ID">
             <font>
                 <Font size="16.0" />
             </font>
         </Label>
-        <Label layoutX="59.0" layoutY="642.0" text="User ID">
+        <Label layoutX="388.0" layoutY="254.0" text="User ID">
             <font>
                 <Font size="16.0" />
             </font>
         </Label>
-        <Button fx:id="modifyApptSaveButton" layoutX="162.0" layoutY="744.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="61.0" onAction="#saveButtonClicked" text="Save" />
-        <Button fx:id="modifyApptCancelButton" layoutX="261.0" layoutY="744.0" mnemonicParsing="false" onAction="#cancelButtonClicked" text="Cancel" />
+        <Button fx:id="modifyApptSaveButton" layoutX="270.0" layoutY="505.0" mnemonicParsing="false" onAction="#saveButtonClicked" prefHeight="25.0" prefWidth="81.0" text="Save" />
+        <Button fx:id="modifyApptCancelButton" layoutX="395.0" layoutY="505.0" mnemonicParsing="false" onAction="#cancelButtonClicked" text="Cancel" />
     </children>
 </AnchorPane>

@@ -4,14 +4,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="807.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.addAppointmentController">
+<AnchorPane prefHeight="596.0" prefWidth="673.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.addAppointmentController">
    <children>
       <Label layoutX="28.0" layoutY="90.0" text="Appointment ID">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="115.0" layoutY="27.0" text="Create New Appointment">
+      <Label layoutX="205.0" layoutY="28.0" text="Create New Appointment">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -22,7 +22,7 @@
       <TextField fx:id="addApptLocationField" layoutX="162.0" layoutY="312.0" />
       <TextField fx:id="addApptTitleField" layoutX="163.0" layoutY="143.0" />
       <DatePicker fx:id="addApptStartDatePicker" layoutX="148.0" layoutY="370.0" />
-      <DatePicker fx:id="addApptEndDatePicker" layoutX="151.0" layoutY="478.0" />
+      <DatePicker fx:id="addApptEndDatePicker" layoutX="452.0" layoutY="370.0" />
       <Label layoutX="64.0" layoutY="143.0" text="Title">
          <font>
             <Font size="16.0" />
@@ -38,7 +38,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="59.0" layoutY="686.0" text="Contact">
+      <Label layoutX="373.0" layoutY="212.0" text="Contact">
          <font>
             <Font size="16.0" />
          </font>
@@ -58,32 +58,32 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="52.0" layoutY="478.0" text="End Date">
+      <Label layoutX="367.0" layoutY="370.0" text="End Date">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <ComboBox fx:id="addApptEndTimeChoice" layoutX="160.0" layoutY="536.0" prefWidth="150.0" />
-      <Label layoutX="52.0" layoutY="536.0" text="End Time">
+      <ComboBox fx:id="addApptEndTimeChoice" layoutX="464.0" layoutY="423.0" prefWidth="150.0" />
+      <Label layoutX="367.0" layoutY="423.0" text="End Time">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <ComboBox fx:id="addApptCustomerIdChoice" layoutX="160.0" layoutY="592.0" prefWidth="150.0" />
-      <ComboBox fx:id="addApptUserIdChoice" layoutX="162.0" layoutY="642.0" prefWidth="150.0" />
-      <ComboBox fx:id="addApptContactChoice" layoutX="160.0" layoutY="686.0" prefWidth="150.0" />
-      <Label layoutX="40.0" layoutY="592.0" text="Customer ID">
+      <ComboBox fx:id="addApptCustomerIdChoice" layoutX="464.0" layoutY="312.0" prefWidth="150.0" />
+      <ComboBox fx:id="addApptUserIdChoice" layoutX="464.0" layoutY="267.0" prefWidth="150.0" />
+      <ComboBox fx:id="addApptContactChoice" layoutX="464.0" layoutY="212.0" prefWidth="150.0" />
+      <Label layoutX="355.0" layoutY="312.0" text="Customer ID">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="59.0" layoutY="642.0" text="User ID">
+      <Label layoutX="374.0" layoutY="267.0" text="User ID">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Button fx:id="addApptSaveButton" layoutX="162.0" layoutY="744.0" mnemonicParsing="false" onAction ="#saveButtonClicked" prefHeight="25.0" prefWidth="61.0" text="Save" />
-      <Button fx:id="addApptCancelButton" layoutX="261.0" layoutY="744.0" mnemonicParsing="false" onAction="#cancelButtonClicked" text="Cancel" />
+      <Button fx:id="addApptSaveButton" layoutX="261.0" layoutY="523.0" mnemonicParsing="false" onAction="#saveButtonClicked" prefHeight="25.0" prefWidth="89.0" text="Save" />
+      <Button fx:id="addApptCancelButton" layoutX="406.0" layoutY="523.0" mnemonicParsing="false" onAction="#cancelButtonClicked" text="Cancel" />
       <ComboBox fx:id="addApptStartTimeChoice" layoutX="160.0" layoutY="423.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

@@ -132,15 +132,15 @@ public class addAppointmentController {
                 ZonedDateTime existingEndZoned = existingEndDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
                 LocalDateTime existingEndLocal = existingEndZoned.toLocalDateTime();
 
-                if (appointment.getCustomerId() == addApptCustomerIdChoice.getValue()) {
-                    if ((startDateTime.isAfter(existingStartLocal) && startDateTime.isBefore(existingEndLocal)) ||
-                            (endDateTime.isAfter(existingStartLocal) && endDateTime.isBefore(existingEndLocal)) ||
-                            (startDateTime.isBefore(existingStartLocal) && endDateTime.isAfter(existingEndLocal))) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments for a customer is not allowed.", ButtonType.OK);
+                //updated code to be for any overlapping appt
+                if ((startDateTime.isAfter(existingStartLocal) && startDateTime.isBefore(existingEndLocal)) ||
+                        (endDateTime.isAfter(existingStartLocal) && endDateTime.isBefore(existingEndLocal)) ||
+                        (startDateTime.isBefore(existingStartLocal) && endDateTime.isAfter(existingEndLocal))) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping customer appointments are not allowed.", ButtonType.OK);
                         alert.showAndWait();
                         return;
                     }
-                }
+
             }
 
             int apptId = Integer.parseInt(String.valueOf((int) (Math.random() * 1000)));
