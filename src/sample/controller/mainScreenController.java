@@ -26,10 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.Initializable;
-import sample.model.Appointment;
-import sample.model.Contacts;
-import sample.model.Countries;
-import sample.model.Customer;
+import sample.model.*;
 
 
 import javax.swing.*;
@@ -333,10 +330,33 @@ public class mainScreenController implements Initializable{
     public void checkAppointmentTimes() throws SQLException {
         LocalDateTime logInTime = LocalDateTime.now(ZoneId.systemDefault());
         ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
+        String username = SharedData.getEnteredUsername();
+        int userID = SharedData.getUserIdFromUsername(username);
         boolean foundAppointment = false;
 
         for (Appointment appt : apptList) {
-            LocalDateTime apptStartTime = appt.getApptStartTime();
+            if(appt.getUserId() == userID){
+                LocalDateTime startDateTime = appt.getApptStartTime();
+                ZoneId userTimeZone = ZoneId.systemDefault();
+                ZonedDateTime userZDT = ZonedDateTime.of(startDateTime, userTimeZone);
+                ZoneId utcTime = ZoneId.of("UTC");
+                ZonedDateTime utcZDT = ZonedDateTime.ofInstant(userZDT.toInstant(),utcTime);
+                userZDT = ZonedDateTime.ofInstant(utcZDT.toInstant(), userTimeZone);
+
+                // Calculate the time difference between the current time and the appointment's start time
+                long minutesDifference = Duration.between(logInTime, userZDT).toMinutes();
+
+                // Check if the appointment's start time is within 15 minutes of the current time
+                if (minutesDifference >= 0 && minutesDifference <= 15) {
+                    // Display an alert
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: "
+                            + appt.getApptId() + " Start Date and Time: " + userZDT, ButtonType.OK);
+                    alert.showAndWait();
+                    foundAppointment = true; // Set the flag to true
+                    break; // Exit the loop after displaying the alert for the first appointment found
+
+            }
+            /**LocalDateTime apptStartTime = appt.getApptStartTime();
             System.out.println(apptStartTime);
             // Convert appointment start time from UTC to user's local time
             ZoneId userTimeZone = ZoneId.systemDefault();
@@ -353,7 +373,7 @@ public class mainScreenController implements Initializable{
                 alert.showAndWait();
                 foundAppointment = true; // Set the flag to true
                 break; // Exit the loop after displaying the alert for the first appointment found
-            }
+            **/}
         }
 
         if (!foundAppointment) {
