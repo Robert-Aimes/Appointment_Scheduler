@@ -51,6 +51,8 @@ public class loginFormController implements Initializable{
     @FXML private Label usernameLabel;
     @FXML private Label passwordLabel;
     @FXML private Label zoneID;
+    @FXML private Button exitButton;
+    @FXML private Label zoneLabel;
     private String alertTitle;
     private String alertHeader;
     private String alertText;
@@ -205,7 +207,8 @@ public class loginFormController implements Initializable{
         usernameLabel.setText(resourceBundle.getString("usernameLabel"));
         passwordLabel.setText(resourceBundle.getString("passwordLabel"));
         title.setText(resourceBundle.getString("title"));
-
+        exitButton.setText(resourceBundle.getString("exitButton"));
+        zoneLabel.setText(resourceBundle.getString("zoneLabel"));
     }
 
 
