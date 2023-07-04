@@ -337,10 +337,11 @@ public class mainScreenController implements Initializable{
 
         for (Appointment appt : apptList) {
             LocalDateTime apptStartTime = appt.getApptStartTime();
+            System.out.println(apptStartTime);
             // Convert appointment start time from UTC to user's local time
             ZoneId userTimeZone = ZoneId.systemDefault();
             ZonedDateTime apptStartLocal = apptStartTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-
+            System.out.println(apptStartTime + "compare " + apptStartLocal);
             // Calculate the time difference between the current time and the appointment's start time
             long minutesDifference = Duration.between(logInTime, apptStartLocal).toMinutes();
 
