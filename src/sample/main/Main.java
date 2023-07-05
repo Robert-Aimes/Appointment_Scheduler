@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import sample.DAO.JDBC;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class Main extends Application {
 
@@ -20,7 +21,13 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("../view/loginForm.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
-        stage.setTitle("Login Screen");
+        Locale locale = Locale.getDefault();
+        if (locale.getLanguage().equals("fr")) {
+            stage.setTitle("écran de connexion");
+        } else{
+            stage.setTitle("Login Screen");
+        }
+
         stage.setScene(scene);
         stage.show();
     }

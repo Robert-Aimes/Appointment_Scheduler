@@ -89,12 +89,29 @@ public class addAppointmentController {
             }
 
             LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
+
             LocalDateTime endDateTime = LocalDateTime.of(endDate, apptEndTime);
 
-            // Get the user's time zone
+            //Convert Start date time to UTC
             ZoneId userTimeZone = ZoneId.systemDefault();
+            ZonedDateTime userZDTStart = ZonedDateTime.of(startDateTime, userTimeZone);
+            ZoneId utcTime = ZoneId.of("UTC");
+            ZonedDateTime utcZDTStart = ZonedDateTime.ofInstant(userZDTStart.toInstant(),utcTime);
+            userZDTStart = ZonedDateTime.ofInstant(utcZDTStart.toInstant(), userTimeZone);
+            System.out.println(utcZDTStart);
+            //Convert End date time to UTC
+            ZonedDateTime userZDTEnd = ZonedDateTime.of(endDateTime, userTimeZone);
+            ZonedDateTime utcZDTEnd = ZonedDateTime.ofInstant(userZDTEnd.toInstant(),utcTime);
+            userZDTEnd = ZonedDateTime.ofInstant(utcZDTEnd.toInstant(), userTimeZone);
+            System.out.println(utcZDTEnd);
 
-            // Convert the user's local time to UTC
+            //Format UTC start and end date/times
+            String utcStart = utcZDTStart.toLocalDate().toString() + " " + utcZDTStart.toLocalTime().toString() + ":00";
+            String utcEnd = utcZDTEnd.toLocalDate().toString() + " " + utcZDTEnd.toLocalTime().toString() + ":00";
+            System.out.println(utcStart);
+            System.out.println(utcEnd);
+
+            /**Convert the user's local time to UTC
             ZonedDateTime userStartDateTime = ZonedDateTime.of(startDateTime, userTimeZone);
             ZonedDateTime userEndDateTime = ZonedDateTime.of(endDateTime, userTimeZone);
             ZonedDateTime utcStartDateTime = userStartDateTime.withZoneSameInstant(ZoneOffset.UTC);
@@ -102,18 +119,21 @@ public class addAppointmentController {
 
             String utcStartTime = convertToUTC(startDate + " " + apptStartTime + ":00");
             String utcEndTime = convertToUTC(endDate + " " + apptEndTime + ":00");
-
+            **/
 
 
             ZoneId estTimeZone = ZoneId.of("America/New_York");
             // Convert appointment start and end times to EST
-            ZonedDateTime estStartDateTime = startDateTime.atZone(userTimeZone).withZoneSameInstant(estTimeZone);
-            ZonedDateTime estEndDateTime = endDateTime.atZone(userTimeZone).withZoneSameInstant(estTimeZone);
+            ZonedDateTime estZDTStart = ZonedDateTime.ofInstant(utcZDTStart.toInstant(),estTimeZone);
+            System.out.println(estZDTStart);
+            ZonedDateTime estZDTEnd = ZonedDateTime.ofInstant(utcZDTEnd.toInstant(),estTimeZone);
+            System.out.println(estZDTEnd);
 
             LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
             LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
-            if (estStartDateTime.toLocalTime().isBefore(estBusinessHoursStart) ||
-                    estEndDateTime.toLocalTime().isAfter(estBusinessHoursEnd)) {
+            if (estZDTStart.toLocalTime().isBefore(estBusinessHoursStart) ||
+                    estZDTEnd.toLocalTime().isAfter(estBusinessHoursEnd) ||
+                    estZDTEnd.toLocalTime().isBefore(estBusinessHoursStart.plusHours(8))) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.", ButtonType.OK);
                 alert.showAndWait();
                 return;
@@ -160,7 +180,7 @@ public class addAppointmentController {
 
 
 
-            Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime.toLocalDateTime(), utcEndDateTime.toLocalDateTime(), currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
+            //Appointment appointment = new Appointment(apptId, apptTitle, apptDescription, apptLocation, apptType, utcStartDateTime.toLocalDateTime(), utcEndDateTime.toLocalDateTime(), currentDateTime, createdBy, currentDateTime, lastUpdatedBy, customerId, userId, contactId);
             String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             Connection connection = JDBC.openConnection();
             PreparedStatement ps = connection.prepareStatement(insertStatement);
@@ -169,8 +189,8 @@ public class addAppointmentController {
             ps.setString(3, apptDescription);
             ps.setString(4, apptLocation);
             ps.setString(5, apptType);
-            ps.setTimestamp(6, Timestamp.valueOf(utcStartTime));
-            ps.setTimestamp(7, Timestamp.valueOf(utcEndTime));
+            ps.setTimestamp(6, Timestamp.valueOf(utcStart));
+            ps.setTimestamp(7, Timestamp.valueOf(utcEnd));
             ps.setTimestamp(8, Timestamp.valueOf(currentDateTime));
             ps.setString(9, createdBy);
             ps.setTimestamp(10, Timestamp.valueOf(currentDateTime));
