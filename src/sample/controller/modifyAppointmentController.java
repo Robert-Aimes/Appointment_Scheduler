@@ -118,31 +118,27 @@ public class modifyAppointmentController {
             }
 
 
-            // Check for overlapping appointments
             List<Appointment> existingAppointments = AppointmentDb.getAllAppointments();
-
             for (Appointment appointment : existingAppointments) {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
-                System.out.println(existingStartDateTime);
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
-                System.out.println(existingEndDateTime);
 
-                //Convert to Local time
+                // Convert to user's local time
                 ZonedDateTime userStartZDT = existingStartDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
                 ZonedDateTime userEndZDT = existingEndDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
                 existingStartDateTime = userStartZDT.toLocalDateTime();
                 existingEndDateTime = userEndZDT.toLocalDateTime();
-                System.out.println(existingStartDateTime);
-                System.out.println(existingEndDateTime);
 
-                if(appointment.getApptId() != Integer.parseInt(modifyApptIdField.getText())) {
+                if (appointment.getApptId() != Integer.parseInt(modifyApptIdField.getText())) {
                     if (appointment.getCustomerId() == modifyApptCustomerIdChoice.getValue()) {
                         if ((startDateTime.isBefore(existingEndDateTime) && endDateTime.isAfter(existingStartDateTime)) ||
                                 (startDateTime.isEqual(existingStartDateTime) && endDateTime.isAfter(existingStartDateTime)) ||
                                 (startDateTime.isBefore(existingEndDateTime) && endDateTime.isEqual(existingEndDateTime))) {
+                            // No overlapping appointments
                             Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments for a customer is not allowed.", ButtonType.OK);
                             alert.showAndWait();
                             return;
+
                         }
                     }
                 }
