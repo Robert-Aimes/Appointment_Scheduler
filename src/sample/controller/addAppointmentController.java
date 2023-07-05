@@ -1,6 +1,7 @@
 package sample.controller;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -89,18 +90,21 @@ public class addAppointmentController {
             }
 
             LocalDateTime startDateTime = LocalDateTime.of(startDate, apptStartTime);
+            System.out.println(startDateTime);
 
             LocalDateTime endDateTime = LocalDateTime.of(endDate, apptEndTime);
 
             //Convert Start date time to UTC
             ZoneId userTimeZone = ZoneId.systemDefault();
             ZonedDateTime userZDTStart = ZonedDateTime.of(startDateTime, userTimeZone);
+            System.out.println(userZDTStart);
             ZoneId utcTime = ZoneId.of("UTC");
             ZonedDateTime utcZDTStart = ZonedDateTime.ofInstant(userZDTStart.toInstant(),utcTime);
             userZDTStart = ZonedDateTime.ofInstant(utcZDTStart.toInstant(), userTimeZone);
             System.out.println(utcZDTStart);
             //Convert End date time to UTC
             ZonedDateTime userZDTEnd = ZonedDateTime.of(endDateTime, userTimeZone);
+            System.out.println(userZDTEnd);
             ZonedDateTime utcZDTEnd = ZonedDateTime.ofInstant(userZDTEnd.toInstant(),utcTime);
             userZDTEnd = ZonedDateTime.ofInstant(utcZDTEnd.toInstant(), userTimeZone);
             System.out.println(utcZDTEnd);
@@ -110,16 +114,6 @@ public class addAppointmentController {
             String utcEnd = utcZDTEnd.toLocalDate().toString() + " " + utcZDTEnd.toLocalTime().toString() + ":00";
             System.out.println(utcStart);
             System.out.println(utcEnd);
-
-            /**Convert the user's local time to UTC
-            ZonedDateTime userStartDateTime = ZonedDateTime.of(startDateTime, userTimeZone);
-            ZonedDateTime userEndDateTime = ZonedDateTime.of(endDateTime, userTimeZone);
-            ZonedDateTime utcStartDateTime = userStartDateTime.withZoneSameInstant(ZoneOffset.UTC);
-            ZonedDateTime utcEndDateTime = userEndDateTime.withZoneSameInstant(ZoneOffset.UTC);
-
-            String utcStartTime = convertToUTC(startDate + " " + apptStartTime + ":00");
-            String utcEndTime = convertToUTC(endDate + " " + apptEndTime + ":00");
-            **/
 
 
             ZoneId estTimeZone = ZoneId.of("America/New_York");
@@ -132,8 +126,7 @@ public class addAppointmentController {
             LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
             LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
             if (estZDTStart.toLocalTime().isBefore(estBusinessHoursStart) ||
-                    estZDTEnd.toLocalTime().isAfter(estBusinessHoursEnd) ||
-                    estZDTEnd.toLocalTime().isBefore(estBusinessHoursStart.plusHours(8))) {
+                    estZDTEnd.toLocalTime().isAfter(estBusinessHoursEnd)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.", ButtonType.OK);
                 alert.showAndWait();
                 return;
@@ -143,24 +136,28 @@ public class addAppointmentController {
 
             for (Appointment appointment : existingAppointments) {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
+                System.out.println(existingStartDateTime);
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
+                System.out.println(existingEndDateTime);
 
-                // Convert existing appointment times from UTC to user's local time
-                ZonedDateTime existingStartZoned = existingStartDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-                LocalDateTime existingStartLocal = existingStartZoned.toLocalDateTime();
+                //Convert to Local time
+                ZonedDateTime userStartZDT = existingStartDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
+                ZonedDateTime userEndZDT = existingEndDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
+                existingStartDateTime = userStartZDT.toLocalDateTime();
+                existingEndDateTime = userEndZDT.toLocalDateTime();
+                System.out.println(existingStartDateTime);
+                System.out.println(existingEndDateTime);
 
-                ZonedDateTime existingEndZoned = existingEndDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-                LocalDateTime existingEndLocal = existingEndZoned.toLocalDateTime();
 
-                //updated code to be for any overlapping appt
-                if ((startDateTime.isAfter(existingStartLocal) && startDateTime.isBefore(existingEndLocal)) ||
-                        (endDateTime.isAfter(existingStartLocal) && endDateTime.isBefore(existingEndLocal)) ||
-                        (startDateTime.isBefore(existingStartLocal) && endDateTime.isAfter(existingEndLocal))) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping customer appointments are not allowed.", ButtonType.OK);
+                if (appointment.getCustomerId() == addApptCustomerIdChoice.getValue()) {
+                    if ((startDateTime.isBefore(existingEndDateTime) && endDateTime.isAfter(existingStartDateTime)) ||
+                            (startDateTime.isEqual(existingStartDateTime) && endDateTime.isAfter(existingStartDateTime)) ||
+                            (startDateTime.isBefore(existingEndDateTime) && endDateTime.isEqual(existingEndDateTime))) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments for a customer is not allowed.", ButtonType.OK);
                         alert.showAndWait();
                         return;
                     }
-
+                }
             }
 
             int apptId = Integer.parseInt(String.valueOf((int) (Math.random() * 1000)));

@@ -396,12 +396,9 @@ public class mainScreenController implements Initializable{
                 Appointment appointment = cellData.getValue();
                 LocalDateTime startDateTime = appointment.getApptStartTime();
                 ZoneId userTimeZone = ZoneId.systemDefault();
-                ZonedDateTime userZDT = ZonedDateTime.of(startDateTime, userTimeZone);
-                ZoneId utcTime = ZoneId.of("UTC");
-                ZonedDateTime utcZDT = ZonedDateTime.ofInstant(userZDT.toInstant(),utcTime);
-                userZDT = ZonedDateTime.ofInstant(utcZDT.toInstant(), userTimeZone);
-
-                return new SimpleStringProperty(userZDT.toString());
+                ZonedDateTime userZDT = startDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
+                String userStart = userZDT.toLocalDate().toString() + " " + userZDT.toLocalTime().toString() + ":00";
+                return new SimpleStringProperty(userStart);
             });
 
             // Create a cell value factory for the end time column
@@ -409,11 +406,9 @@ public class mainScreenController implements Initializable{
                 Appointment appointment = cellData.getValue();
                 LocalDateTime endDateTime = appointment.getApptEndTime();
                 ZoneId userTimeZone = ZoneId.systemDefault();
-                ZonedDateTime userZDT = ZonedDateTime.of(endDateTime, userTimeZone);
-                ZoneId utcTime = ZoneId.of("UTC");
-                ZonedDateTime utcZDT = ZonedDateTime.ofInstant(userZDT.toInstant(),utcTime);
-                userZDT = ZonedDateTime.ofInstant(utcZDT.toInstant(), userTimeZone);
-                return new SimpleStringProperty(userZDT.toString());
+                ZonedDateTime userZDT = endDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
+                String userEnd = userZDT.toLocalDate().toString() + " " + userZDT.toLocalTime().toString() + ":00";
+                return new SimpleStringProperty(userEnd);
 
             });
 
