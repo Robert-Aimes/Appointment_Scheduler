@@ -5,7 +5,7 @@ Author Information:
 - Author: Robert Aimes
 - Student ID: 001445280
 - Contact Info: raimes1@wgu.edu
-- Version: 1.0
+- Version: 1.1
 - Date: 6/30/2023
 
 IDE and Java Information:
