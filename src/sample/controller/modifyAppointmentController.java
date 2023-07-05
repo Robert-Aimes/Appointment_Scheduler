@@ -110,7 +110,7 @@ public class modifyAppointmentController {
             LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
             LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
 
-            if (estStartDateTime.toLocalTime().isBefore(estBusinessHoursStart) || estEndDateTime.toLocalTime().isAfter(estBusinessHoursEnd)) {
+            if (estStartDateTime.toLocalTime().isBefore(estBusinessHoursStart) || estEndDateTime.toLocalTime().isAfter(estBusinessHoursEnd) || estEndDateTime.toLocalTime().isBefore(estBusinessHoursStart) ) {
                 // Display an error message for scheduling outside business hours
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.", ButtonType.OK);
                 alert.showAndWait();

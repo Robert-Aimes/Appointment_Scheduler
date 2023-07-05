@@ -126,7 +126,7 @@ public class addAppointmentController {
             LocalTime estBusinessHoursStart = LocalTime.of(8, 0);
             LocalTime estBusinessHoursEnd = LocalTime.of(22, 0);
             if (estZDTStart.toLocalTime().isBefore(estBusinessHoursStart) ||
-                    estZDTEnd.toLocalTime().isAfter(estBusinessHoursEnd)) {
+                    estZDTEnd.toLocalTime().isAfter(estBusinessHoursEnd) || estZDTEnd.toLocalTime().isBefore(estBusinessHoursStart)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.", ButtonType.OK);
                 alert.showAndWait();
                 return;
