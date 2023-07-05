@@ -328,54 +328,25 @@ public class mainScreenController implements Initializable{
      * @throws SQLException
      */
     public void checkAppointmentTimes() throws SQLException {
-        LocalDateTime logInTime = LocalDateTime.now(ZoneId.systemDefault());
+        ZonedDateTime logInTime = ZonedDateTime.now(ZoneId.systemDefault());
         ObservableList<Appointment> apptList = AppointmentDb.getAllAppointments();
-        String username = SharedData.getEnteredUsername();
-        int userID = SharedData.getUserIdFromUsername(username);
         boolean foundAppointment = false;
-
         for (Appointment appt : apptList) {
-            if(appt.getUserId() == userID){
-                LocalDateTime startDateTime = appt.getApptStartTime();
-                ZoneId userTimeZone = ZoneId.systemDefault();
-                ZonedDateTime userZDT = ZonedDateTime.of(startDateTime, userTimeZone);
-                ZoneId utcTime = ZoneId.of("UTC");
-                ZonedDateTime utcZDT = ZonedDateTime.ofInstant(userZDT.toInstant(),utcTime);
-                userZDT = ZonedDateTime.ofInstant(utcZDT.toInstant(), userTimeZone);
-
-                // Calculate the time difference between the current time and the appointment's start time
-                long minutesDifference = Duration.between(logInTime, userZDT).toMinutes();
-
-                // Check if the appointment's start time is within 15 minutes of the current time
-                if (minutesDifference >= 0 && minutesDifference <= 15) {
-                    // Display an alert
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: "
-                            + appt.getApptId() + " Start Date and Time: " + userZDT, ButtonType.OK);
-                    alert.showAndWait();
-                    foundAppointment = true; // Set the flag to true
-                    break; // Exit the loop after displaying the alert for the first appointment found
-
-            }
-            /**LocalDateTime apptStartTime = appt.getApptStartTime();
-            System.out.println(apptStartTime);
-            // Convert appointment start time from UTC to user's local time
+            LocalDateTime apptStartTime = appt.getApptStartTime();
             ZoneId userTimeZone = ZoneId.systemDefault();
-            ZonedDateTime apptStartLocal = apptStartTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-            System.out.println(apptStartTime + "compare " + apptStartLocal);
+            ZonedDateTime apptStartZDT = apptStartTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
             // Calculate the time difference between the current time and the appointment's start time
-            long minutesDifference = Duration.between(logInTime, apptStartLocal).toMinutes();
-
+            long minutesDifference = Duration.between(logInTime, apptStartZDT).toMinutes();
             // Check if the appointment's start time is within 15 minutes of the current time
             if (minutesDifference >= 0 && minutesDifference <= 15) {
                 // Display an alert
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "You have an appointment starting soon. Appointment ID: "
-                        + appt.getApptId() + " Start Date and Time: " + apptStartLocal, ButtonType.OK);
+                        + appt.getApptId() + " Start Date and Time: " + apptStartZDT.toLocalDateTime(), ButtonType.OK);
                 alert.showAndWait();
                 foundAppointment = true; // Set the flag to true
                 break; // Exit the loop after displaying the alert for the first appointment found
-            **/}
+            }
         }
-
         if (!foundAppointment) {
             // Display an alert indicating no appointments within 15 minutes
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "There are no appointments within 15 minutes.", ButtonType.OK);

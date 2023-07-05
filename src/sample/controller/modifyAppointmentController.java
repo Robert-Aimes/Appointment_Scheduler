@@ -117,32 +117,37 @@ public class modifyAppointmentController {
                 return;
             }
 
-            //Not sure if this is working
+
             // Check for overlapping appointments
             List<Appointment> existingAppointments = AppointmentDb.getAllAppointments();
+
             for (Appointment appointment : existingAppointments) {
                 LocalDateTime existingStartDateTime = appointment.getApptStartTime();
+                System.out.println(existingStartDateTime);
                 LocalDateTime existingEndDateTime = appointment.getApptEndTime();
+                System.out.println(existingEndDateTime);
 
-                // Convert existing appointment times from UTC to user's local time
-                ZonedDateTime existingStartZoned = existingStartDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-                LocalDateTime existingStartLocal = existingStartZoned.toLocalDateTime();
+                //Convert to Local time
+                ZonedDateTime userStartZDT = existingStartDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
+                ZonedDateTime userEndZDT = existingEndDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(userTimeZone);
+                existingStartDateTime = userStartZDT.toLocalDateTime();
+                existingEndDateTime = userEndZDT.toLocalDateTime();
+                System.out.println(existingStartDateTime);
+                System.out.println(existingEndDateTime);
 
-                ZonedDateTime existingEndZoned = existingEndDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(userTimeZone);
-                LocalDateTime existingEndLocal = existingEndZoned.toLocalDateTime();
-
-                if(appointment.getApptId() != Integer.parseInt(modifyApptIdField.getText())){
-                    //updated code to be for any overlapping appt
-                    if ((startDateTime.isAfter(existingStartLocal) && startDateTime.isBefore(existingEndLocal)) ||
-                            (endDateTime.isAfter(existingStartLocal) && endDateTime.isBefore(existingEndLocal)) ||
-                            (startDateTime.isBefore(existingStartLocal) && endDateTime.isAfter(existingEndLocal))) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping customer appointments are not allowed.", ButtonType.OK);
-                        alert.showAndWait();
-                        return;
+                if(appointment.getApptId() != Integer.parseInt(modifyApptIdField.getText())) {
+                    if (appointment.getCustomerId() == modifyApptCustomerIdChoice.getValue()) {
+                        if ((startDateTime.isBefore(existingEndDateTime) && endDateTime.isAfter(existingStartDateTime)) ||
+                                (startDateTime.isEqual(existingStartDateTime) && endDateTime.isAfter(existingStartDateTime)) ||
+                                (startDateTime.isBefore(existingEndDateTime) && endDateTime.isEqual(existingEndDateTime))) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Overlapping appointments for a customer is not allowed.", ButtonType.OK);
+                            alert.showAndWait();
+                            return;
+                        }
                     }
                 }
-
             }
+
 
             //Need to work on some logic here to keep the created by and data values from original record
             int apptId = Integer.parseInt(modifyApptIdField.getText());
